@@ -1,0 +1,73 @@
+ <body id="reportsPage">
+ 
+    <div class="container mt-5">
+      <div class="row tm-content-row">
+        <div class="col-sm-12 col-md-12 col-lg-8 col-xl-8 tm-block-col">
+          <div class="tm-bg-primary-dark tm-block tm-block-products">
+            <div class="tm-product-table-container">
+              <table class="table table-hover tm-table-small tm-product-table" id="">
+                <thead>
+                  <tr>
+                    
+                    <th scope="col">PRODUCT NAME</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">EXPIRE DATE</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">&nbsp;</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each products}}
+                  <tr>
+                   
+                    <td class="tm-product-name">{{this.name}}</td>
+                     <td>{{this.category}}</td>
+                    <td>{{this.price}}</td>
+                    
+                    <td>{{expire_date}}</td>
+                    <td><img style="width: 50px;height:50px" src="/product-image/{{this._id}}.jpg" alt=""></td>
+                    <td><button type="submit" class="btn-warning rounded-pill"> <a href="/admin/products/edit/{{this._id}}">Edit</a></button></td>
+                    <td>
+                    
+                      <a href="/admin/products/delete/{{this._id}}" onclick="return confirm('confirm delete')" class="tm-product-delete-link">
+                        <i class="far fa-trash-alt tm-product-delete-icon"></i>
+                      </a>
+                         {{/each}}
+                    </td>
+                  </tr>
+               
+                </tbody>
+              </table>
+            </div>
+            <!-- table container -->
+            <a
+              href="/admin/product/new-product"
+              class="btn btn-primary btn-block text-uppercase mb-3">Add new product</a>
+            <button class="btn btn-primary btn-block text-uppercase">
+              Delete selected products
+            </button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    <footer class="tm-footer row tm-mt-small">
+      <div class="col-12 font-weight-light">
+        <p class="text-center text-white mb-0 px-4 small">
+          Copyright &copy; <b>2018</b> All rights reserved. 
+          
+          Design: <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Template Mo</a>
+        </p>
+      </div>
+    </footer>
+
+   
+    <script>
+      $(function() {
+        $(".tm-product-name").on("click", function() {
+          window.location.href = "edit-product.html";
+        });
+      });
+    </script>

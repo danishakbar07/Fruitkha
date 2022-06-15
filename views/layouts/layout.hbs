@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  
+<script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="Scripts/bootstrap.min.js"></script>
+
+	<!-- title -->
+
+      {{#if admin}}
+	    <title>Product Admin - Dashboard HTML Template</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
+    <!-- https://fonts.google.com/specimen/Roboto -->
+    <link rel="stylesheet" href="/product-admin-master/css/fontawesome.min.css">
+    <!-- https://fontawesome.com/ -->
+    <link rel="stylesheet" href="/product-admin-master/css/bootstrap.min.css">
+    <!-- https://getbootstrap.com/ -->
+    <link rel="stylesheet" href="/product-admin-master/css/templatemo-style.css">
+	<link rel="stylesheet" href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <!--
+	Product Admin CSS Template
+	https://templatemo.com/tm-524-product-admin
+	-->
+	{{else}}
+		<title>Fruitkha</title>
+
+	<!-- favicon -->
+	<link rel="shortcut icon" type="image/png" href="//assets/">
+	<!-- google font -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+	<!-- fontawesome -->
+	<link rel="stylesheet" href="/assets/css/all.min.css">
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+	<!-- owl carousel -->
+	<link rel="stylesheet" href="/assets/css/owl.carousel.css">
+	<!-- magnific popup -->
+	<link rel="stylesheet" href="/assets/css/magnific-popup.css">
+	<!-- animate css -->
+	<link rel="stylesheet" href="/assets/css/animate.css">
+	<!-- mean menu css -->
+	<link rel="stylesheet" href="/assets/css/meanmenu.min.css">
+	<!-- main style -->
+	<link rel="stylesheet" href="/assets/css/main.css">
+	<!-- responsive -->
+	<link rel="stylesheet" href="/assets/css/responsive.css">
+{{/if}}
+</head>
+<body>
+	 {{#if admin}}
+    {{>admin-header}}
+	{{else if use}}
+	{{>user-header}}
+	
+	{{/if}}
+	
+  {{{body}}}
+  {{#if admin}}
+   <script src="/product-admin-master/js/jquery-3.3.1.min.js"></script>
+    <script src="/product--admin-master/jquery-ui-datepicker/jquery-ui.min.js"></script>
+    <!-- https://jquery.com/download/ -->
+    <script src="/product-admin-master/js/moment.min.js"></script>
+    <!-- https://momentjs.com/ -->
+    <script src="/product-admin-master/js/Chart.min.js"></script>
+    <!-- http://www.chartjs.org/docs/latest/ -->
+    <script src="/product-admin-master/js/bootstrap.min.js"></script>
+    <!-- https://getbootstrap.com/ -->
+    <script src="/product-admin-master/js/tooplate-scripts.js"></script>
+	<script src="/javascripts/script.js"></script>
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+		<script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+		<script>
+  $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+
+</script>
+
+<script>
+     $(document).ready(function(){
+       $('#usersTable').DataTable();
+          });
+
+          function addRowCount(tableAttr) {
+  $(tableAttr).each(function(){
+    $('th:first-child, thead td:first-child', this).each(function(){
+      var tag = $(this).prop('tagName');
+      $(this).before('<'+tag+'>#</'+tag+'>');
+    });
+    $('td:first-child', this).each(function(i){
+      $(this).before('<td>'+(i+1)+'</td>');
+    });
+  });
+}
+
+addRowCount('.table'); 
+
+</script>
+		
+    <script>
+        Chart.defaults.global.defaultFontColor = 'white';
+        let ctxLine,
+            ctxBar,
+            ctxPie,
+            optionsLine,
+            optionsBar,
+            optionsPie,
+            configLine,
+            configBar,
+            configPie,
+            lineChart;
+        barChart, pieChart;
+        // DOM is ready
+        $(function () {
+            drawLineChart(); // Line Chart
+            drawBarChart(); // Bar Chart
+            drawPieChart(); // Pie Chart
+
+            $(window).resize(function () {
+                updateLineChart();
+                updateBarChart();                
+            });
+        })
+		  
+      $(function() {
+        $("#expire_date").datepicker();
+      });
+
+    </script>
+	{{else}}
+
+    <script src="/assets/js/jquery-1.11.3.min.js"></script>
+	<!-- bootstrap -->
+	<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+	<!-- count down -->
+	<script src="/assets/js/jquery.countdown.js"></script>
+	<!-- isotope -->
+	<script src="/assets/js/jquery.isotope-3.0.6.min.js"></script>
+	<!-- waypoints -->
+	<script src="/assets/js/waypoints.js"></script>
+	<!-- owl carousel -->
+	<script src="/assets/js/owl.carousel.min.js"></script>
+	<!-- magnific popup -->
+	<script src="/assets/js/jquery.magnific-popup.min.js"></script>
+	<!-- mean menu -->
+	<script src="/assets/js/jquery.meanmenu.min.js"></script>
+	<!-- sticker js -->
+	<script src="/assets/js/sticker.js"></script>
+	<!-- main js -->
+	<script src="/assets/js/main.js"></script>
+	<script src="/javascripts/script.js"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+{{/if}}
+</body>

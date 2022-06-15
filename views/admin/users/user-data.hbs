@@ -1,0 +1,55 @@
+
+ <section>
+
+<div class="tm-product-table-container container">
+    
+
+
+<table class="table mt-5 table table-hover tm-table-small tm-product-table" id="myTable">
+  <thead>
+    <tr>
+   
+      <th scope="col">User Name</th>
+      <th scope="col">Email </th>
+      <th scope="col">Phone no</th>
+      <th scope="col">status</th>
+      <th scope="col">options </th>
+      
+      
+    </tr>
+  </thead>
+  <tbody>
+   {{#each users}}
+
+
+    <tr>
+       
+       <td>{{this.name}}</td>
+       <td>{{this.email}}</td>
+       <td>{{this.number}}</td>
+       {{#if this.status}}
+       <td>Active</td>
+       {{else}}
+        <td>Disabled</td>
+        {{/if}}
+       {{#if this.status}}
+
+       <td>   <a onclick="userBlock('{{this._id}}')"   class="btn btn-outline-danger rounded-pill" >block</a></td>
+       {{else}}
+       <td>   <a onclick="userUnblock('{{this._id}}')"  class="btn btn-outline-success btn-sm rounded-pill" >unblock</a></td>
+       {{/if}}
+      
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
+</div>
+
+</section>
+
+
+<script>
+  $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>

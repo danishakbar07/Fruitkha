@@ -1,0 +1,108 @@
+<section class="vh-100" style="background-color: #9A616D;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-xl-10">
+        <div class="card" style="border-radius: 1rem;">
+          <div class="row g-0">
+            <div class="col-md-6 col-lg-5 d-none d-md-block">
+              <img src="https://img.freepik.com/free-photo/two-halfs-green-kiwi-black-plate-fresh-ripe-fruit-healthy-food-concept_264197-6708.jpg?w=900"
+                alt="login form" class="img-fluid " style="border-radius: 1rem 0 0 1rem;" />
+            </div>
+            <div class="col-md-6 col-lg-7 d-flex align-items-center">
+              <div class="card-body p-4 p-lg-5 text-black">
+
+                <form action="/users/login" method="post">
+
+                  <div class="d-flex align-items-center mb-3 pb-1">
+                    <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
+                    <span class="h1 fw-bold mb-0">Logo</span>
+                    {{#if show}}
+                    <p class="text-danger">user doesnt exist</p>
+                    {{/if}}
+                    {{#if block}}
+                    <h4 class="text-danger">Your Account has been blocked</h4>
+                     {{/if}}
+                  </div>
+
+                  <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
+
+                  <div class="form-outline mb-4">
+                    <input type="email" id="email" class="form-control form-control-lg" name="email" onkeyup="validEmail()"/>
+                    <p class="text-danger " id="emailerr" ></p>
+                    <label class="form-label" for="form2Example17">Email address</label>
+                  </div>
+
+                  <div class="form-outline mb-4">
+                    <input type="password" id="password" class="form-control form-control-lg" name="password" onkeyup="validPassword()" />
+                    <p class="text-danger" id="passworderr" ></p>
+                    <label class="form-label" for="form2Example27">Password</label>
+                  </div>
+
+                  <div class="pt-1 mb-4">
+                    <button class="btn btn-dark btn-lg btn-block" onclick="return validation()" type="submit">Login</button>
+                  </div>
+
+                  <a class="small text-muted" href="#!">Forgot password?</a>
+                  <p class="mb-5 pb-lg-2" style="color: #393f81;">Don't have an account? <a href="/users"
+                      style="color: #393f81;">Register here</a></p>
+                  <a href="#!" class="small text-muted">Terms of use.</a>
+                  <a href="#!" class="small text-muted">Privacy policy</a>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+ <script>
+   // var errorName = document.getElementById('nameerr')
+    var errorEmail = document.getElementById('emailerr')
+    var errorPassword = document.getElementById('passworderr')
+    //var errorNumber = document.getElementById('numbererr')
+    //var errorrpassword= document.getElementById('rpassworderr')
+
+    function validEmail() {
+        const name = document.getElementById('email').value
+        if (name == "") {
+            errorEmail.innerHTML = "enter you email address"
+            return false
+
+
+        }
+        if (!name.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/)) {
+            errorEmail.innerHTML = 'enter a proper email adress'
+            return false
+        }
+
+        errorEmail.innerHTML = null
+        return true
+    }
+    
+    function validPassword() {
+        const name = document.getElementById('password').value
+        if (name == "") {
+            errorPassword.innerHTML = "enter a password"
+            return false
+        }
+        if (name.length < 3) {
+            errorPassword.innerHTML = "password should be more than three characters"
+            return false
+        }
+        errorPassword.innerHTML = null
+        return true
+    }
+    
+ 
+    function validation() {
+        if (  !validEmail() && !validPassword() ) {
+            return false
+        }else if(  !validEmail() || !validPassword() ){
+          return false
+        }
+        return true
+    }
+</script>
+</section>
