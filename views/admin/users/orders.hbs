@@ -1,0 +1,153 @@
+
+
+ 
+ <div class="container">
+    <div class="row">
+
+<div class="table-responsive pb-5">
+  <table class="table table-bordered table-hover  table-dark mb-5 mt-3   ">
+  <thead>
+    <tr>
+      <th scope="col">index</th>
+      <th scope="col">Date</th>
+      <th scope="col">UserName</th>
+      <th scope="col">Phone No</th>
+	  <th scope="col">Address</th>
+     <th scope="col">products</th>
+	  
+       <th scope="col">Total</th>
+        <th scope="col">Status</th>
+
+
+
+        <th scope="col">option</th>
+
+   
+    </tr>
+  </thead>
+  <tbody>
+     {{#each orders}}
+     <tr>{{inc @index}}</tr>
+    <tr>
+     
+      <td>{{date}}</td>
+      {{#each user}}
+      <td>{{this.name}}</td>
+      {{/each}}
+      <td>{{deliveryDetails.phoneno}}</td>
+	   <td>{{deliveryDetails.address}}</td>
+    
+     <td > {{#each product}} {{this.name}} &nbsp;   {{/each}}</td>    
+    
+      <td class="fw-bold">Rs {{price}}</td>
+      {{#ifCompare status 'canceled'}}
+
+      <td><div id={{this._id}} class="text-danger fw-bolder fs-5">{{status}} </div></td>
+     {{else}} 
+      {{#ifCompare status 'shipped'}}
+        <td><div id={{this._id}} class="text-warning fw-bolder fs-5">{{status}} </div></td>
+     {{else}}
+       {{#ifCompare status 'delivered'}}
+
+        
+       <td><div id={{this._id}} class="text-success fw-bolder fs-5">{{status}} </div></td>
+       {{else}}
+       
+        {{#ifCompare status 'placed'}}
+         <td><div id={{this._id}} class="text-success fw-bolder fs-5">{{status}} </div></td>
+         {{else}}
+          <td><div id={{this._id}} class="text-danger fw-bolder fs-5">{{status}} </div></td>
+{{/ifCompare}}
+{{/ifCompare}}
+{{/ifCompare}}
+{{/ifCompare}}
+      <td>
+
+<div class="dropdown">  
+  <button class=" dropbtn" style="border:0ch;background:none" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+    <i class="fa-solid fa-pen-to-square"></i>
+  </button>
+  <div class="dropdown-content" aria-labelledby="dropdownMenuButton">
+    {{#ifCompare status 'canceled'}}
+    <button class=" dropdown-item rounded-pill  " onclick="edit('{{this._id}}','shipped')" disabled>Ship</button>
+     <button class="dropdown-item rounded-pill" onclick="edit('{{this._id}}','delivered')" disabled>deliver</button>
+    <button  class="dropdown-item rounded-pill" onclick="cancelOrder('{{this._id}}')" disabled>cancel</button>
+
+    {{else}}
+    {{#ifCompare status 'shipped'}}
+
+    <button class=" dropdown-item rounded-pill  " onclick="edit('{{this._id}}','shipped')" disabled>Ship</button>
+     <button class="dropdown-item rounded-pill" onclick="edit('{{this._id}}','delivered')">deliver</button>
+    <button  class="dropdown-item rounded-pill" onclick="cancelOrder('{{this._id}}')" disabled>cancel</button>
+    {{else}}
+    {{#ifCompare status 'delivered'}}
+     <button class=" dropdown-item rounded-pill  " onclick="edit('{{this._id}}','shipped')" disabled>Ship</button>
+     <button class="dropdown-item rounded-pill" onclick="edit('{{this._id}}','delivered')" disabled>deliver</button>
+    <button  class="dropdown-item rounded-pill" onclick="cancelOrder('{{this._id}}')" disabled>cancel</button>
+    {{else}}
+      <button class=" dropdown-item rounded-pill  " onclick="edit('{{this._id}}','shipped')">Ship</button>
+     <button class="dropdown-item rounded-pill" onclick="edit('{{this._id}}','delivered')">deliver</button>
+    <button  class="dropdown-item rounded-pill" onclick="cancelOrder('{{this._id}}')">cancel</button>
+  {{/ifCompare}}
+  {{/ifCompare}}
+  {{/ifCompare}}
+  
+  </div>
+</div>
+</td>
+    </tr>
+      {{/each}}
+ 
+  </tbody>
+ 
+
+ 
+</table>
+</div>
+
+    </div>
+ </div>
+
+
+ <style>
+.dropbtn {
+  background-color: #4CAF50;
+  color: rgb(245, 226, 226);
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #151313;
+    border-radius: 5px;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content button:hover {background-color: #ec780c}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}
+</style>

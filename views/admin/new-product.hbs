@@ -16,12 +16,13 @@
                       for="name"
                       >Product Name
                     </label>
+                    <p class="text-danger" id="names"></p>
                     <input
                       id="name"
                       name="name"
                       type="text"
                       class="form-control validate"
-                      required
+                  onkeyup="validateName()"
                     />
                   </div>
                   <div class="form-group mb-3">
@@ -29,11 +30,14 @@
                       for="description"
                       >Description</label
                     >
+                      <p class="text-danger" id="discriptions"></p>
                     <textarea
                       name="description"
+                      id="discription"
                       class="form-control validate"
                       rows="3"
-                      required
+                      onkeyup="validateDiscription"
+                      
                     ></textarea>
                   </div>
                    
@@ -42,12 +46,14 @@
                       for="category"
                       >Category</label
                     >
+                     <p class="text-danger" id="discriptions"></p>
                     <select
                       class="custom-select tm-select-accounts"
                       id="category"
                       name="category"
+                      required
                     >
-                      <option  selected>Select category</option>
+                      <option  >Select category</option>
                       {{#each category}}
                       <option  value="{{this.name}}">{{this.name}}</option>
                       {{/each}}
@@ -55,26 +61,15 @@
                     </select>
                   </div>
                   <div class="row">
-                      <div class="form-group mb-3 col-xs-12 col-sm-6">
-                          <label
-                            for="expire_date"
-                            >Expire Date
-                          </label>
-                          <input
-                            id="expire_date"
-                            name="expire_date"
-                            type="text"
-                            class="form-control validate"
-                            data-large-mode="true"
-                          />
-                        </div>
+                    
                         <div class="form-group mb-3 col-xs-12 col-sm-6">
                           <label
                             for="stock"
                             >Price
                           </label>
+                           <p class="text-danger" id="numbers"></p>
                           <input
-                            id="stock"
+                            id="number"
                             name="price"
                             type="number"
                             class="form-control validate"
@@ -92,18 +87,22 @@
                   ></i>
                 </div>
                 <div class="custom-file mt-3 mb-3">
-                  <input id="fileInput" type="file" style="display:none; " name="image"/>
+                  <input id="fileInput" type="file" style="display:none; " name="image" required/>
+                   <label for="stock">
+                            
+                        
+                          </label>
                   <input
                     type="button"
                     class="btn btn-primary btn-block mx-auto"
                     
                     
                     onclick="document.getElementById('fileInput').click();"
-                  />
+                 value="add Image" /> 
                 </div>
               </div>
               <div class="col-12">
-                <button type="submit" class="btn btn-primary btn-block text-uppercase">Add Product Now</button>
+                <button type="submit" onclick="return validation()" class="btn btn-primary btn-block text-uppercase">Add Product Now</button>
               </div>
             </form>
             </div>
@@ -120,12 +119,53 @@
         </p>
         </div>
     </footer> 
-
+ <script defer src="https://cdn.crop.guide/loader/l.js?c=GVVLNV"></script>
 
     <script src="jquery-ui-datepicker/jquery-ui.min.js"></script>
     <!-- https://jqueryui.com/download/ -->
  
-    <script>
-      $(function() {
-        $("#expire_date").datepicker();
-      });
+	 <script>
+    let errorName = document.getElementById('names')
+    let errorDescription = document.getElementById('discriptions')
+  
+  
+    
+    function validateName() {
+		
+        const name = document.getElementById('name').value;
+        if (name == "") {
+            errorName.innerHTML = 'required'
+            return false
+        }  
+        if (!name.match(/^[a-zA-Z]*$/)) {
+            errorName.innerHTML = 'invalid'
+            return false
+        }
+        errorName.innerHTML = ''
+        return true
+
+    }
+   
+	function validateDiscription(){
+		const address=document.getElementById('discription').value
+		if(address==''){
+			errorDescription.innerHTML='cannot be empty'
+			return false
+
+		}
+		errorAddress.innerHTML=null
+		return true
+	}
+   
+
+
+
+ 
+    function validation() {
+        if (validateName()  && validateDiscription() ) {
+            
+         return true
+        }
+        return false
+    }
+	</script>

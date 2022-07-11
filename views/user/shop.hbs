@@ -24,10 +24,10 @@
                     <div class="product-filters">
                         <ul>
                            
-                            <li class="active" data-filter="*">All</li>
+                            <li  ><a onclick="category('all')">All</a> </li>
                           
                              {{#each category}}
-                            <li ><a href="/category/{{this.name}}">{{this.name}}</a></li>
+                            <li ><a onclick="category('{{this.name}}')">{{this.name}}</a></li>
                               {{/each}}
                         
 
@@ -36,22 +36,53 @@
                 </div>
             </div>
 
-			<div class="row product-lists">
-                {{#each products}}
-				<div class="col-lg-4 col-md-6 text-center strawberry">
+			<div class="row product-lists" >
+				{{#if response}}
+				{{#each response}}
+					<div class="col-lg-4 col-md-6 text-center strawberry" >
 					<div class="single-product-item">
 						<div class="product-image">
-							<a href="#"><img src="/product-image/{{this._id}}.jpg" alt=""></a>
+							<a href="#"><img style="width:300px ; height:300px" src="/product-image/{{this._id}}.jpg" alt=""></a>
 						</div>
+							{{#if offerstatus}}
 						<h3>{{name}}</h3>
-						<p class="product-price"><span>Per Kg</span> Rs {{price}} </p>
+						<p style="text-decoration:line-through ; color:grey;"><span class="pt-3">Per Kg</span> Rs {{price}} </p>
+						<p class="product-price text-success"> {{offerpercentage}} % </p>
+						<p class="product-price"><span>Per Kg</span>Rs{{discountPrice}} </p>
+					{{else}}
+						<h3 style="margin: bottom 50px; ;">{{name}}</h3>
+						<p class="product-price"><span style="margin-bottom: 104px;">Per Kg</span> Rs {{price}} </p>
+						{{/if}}
 						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
 					</div>
 				</div>
+				{{/each}}
+				{{else}}
+				{{#each products}}
+                
+				<div class="col-lg-4 col-md-6 text-center strawberry" >
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="#"><img style="width:300px ; height:300px" src="/product-image/{{this._id}}.jpg" alt=""></a>
+						</div>
+							{{#if offerstatus}}
+						<h3>{{name}}</h3>
+						<p style="text-decoration:line-through ; color:grey;"><span class="pt-3">Per Kg</span> Rs {{price}} </p>
+						<p class="product-price text-success"> {{offerpercentage}} % </p>
+						<p class="product-price"><span>Per Kg</span>Rs{{discountPrice}} </p>
+						{{else}}
+						
+						<h3 style="margin: bottom 50px; ;">{{name}}</h3>
+						<p class="product-price"><span style="margin-bottom: 104px;">Per Kg</span> Rs {{price}} </p>
+						{{/if}}
+							<button class="cart-btn rounded-pill btn-warning mt-3"  onclick="addtoCart('{{this._id}}')"><i class="fas fa-shopping-cart"></i>Add to Cart</button>
+					</div>
+				</div>
 			{{/each}}
+			{{/if}}
 			</div>
 
-			<div class="row">
+			{{!-- <div class="row">
 				<div class="col-lg-12 text-center">
 					<div class="pagination-wrap">
 						<ul>
@@ -63,7 +94,7 @@
 						</ul>
 					</div>
 				</div>
-			</div>
+			</div> --}}
 		</div>
 	</div>
 	<!-- end products -->

@@ -2,7 +2,7 @@
     <div class="container mt-5">
       <div class="row tm-content-row">
        
-        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 tm-block-col">
+        <div class="col-sm-6 col-md-6 col-lg-5 col-xl-5 tm-block-col">
           <div class="tm-bg-primary-dark tm-block tm-block-product-categories">
             <h2 class="tm-block-title">Product Categories</h2>
             <div class="tm-product-table-container">
@@ -32,6 +32,143 @@
               <a href="/admin/new-category">Add new category</a>
               
             </button>
+          </div>
+        </div>
+
+      
+          <div class="col-sm-6 col-md-6 col-lg-7 col-xl-7 tm-block-col">
+          <div class="tm-bg-primary-dark tm-block tm-block-product-categories">
+            <h2 class="tm-block-title">Product Categories</h2>
+            <div class="tm-product-table-container">
+              <table class="table tm-table-small tm-product-table">
+                 <thead>
+                  <tr>
+                    
+                    <th scope="col">Offer Name</th>
+                    <th scope="col">offer Percentage</th>
+                      <th scope="col">code</th>
+                    <th scope="col">Added Date</th>
+                  
+                    <th scope="col">expire Date</th>
+                    
+                    <th scope="col">Edit</th>
+                    <th scope="col">delete</th>
+
+                  
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each coupons}}
+                  <tr>
+                    <td class="tm-product-name">{{this.name}}</td>
+                    <td class="tm-product-name">{{this.offer}}</td>
+                     <td class="tm-product-name">{{this.code}}</td>
+
+                    <td class="tm-product-name">{{this.addeddate}}</td>
+                    <td class="tm-product-name">{{this.expiredate}}</td>
+
+                    <td class="text-center"><button type="submit" class="btn-warning rounded-pill"> <a href="/admin/categories/edit/{{this._id}}">Edit</a></button></td>
+                  <td>
+                    
+                      <a href="/admin/category/delete/{{this._id}}" onclick="return confirm('confirm delete')" class="tm-product-delete-link">
+                        <i class="far fa-trash-alt tm-product-delete-icon"></i>
+                      </a>
+                         
+                    </td>
+                  </tr>
+                  {{/each}}
+             
+                 
+                </tbody>
+              </table>
+            </div>
+            <!-- table container -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Add coupon
+</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <form action="/admin/new-coupon" method="post" class="tm-edit-product-form"  >
+                  <div class="form-group mb-3">
+                    <label
+                      for="name"
+                       class="text-black">Coupon Name
+                    </label>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      class="form-control validate"
+                      required
+                    />
+                  </div>
+                   <div class="form-group mb-3">
+                    <label
+                      for="name"
+                       class="text-black">Coupon Code
+                    </label>
+                    <input
+                      id="name"
+                      name="code"
+                      type="text"
+                      class="form-control validate"
+                      required
+                    />
+                  </div>
+                       <div class="form-group mb-3">
+                    <label
+                      for="name"
+                     class="text-black" >offer Price
+                    </label>
+                    <input
+                      id="name"
+                      name="offer"
+                      type="text"
+                      class="form-control validate"
+                      required
+                    />
+                  </div>
+                    <div class="form-group mb-3">
+                    <label
+                      for="name"
+                     class="text-black" >Added Date
+                    </label>
+                    <input
+                      id="name"
+                      name="addeddate"
+                      type="date"
+                      class="form-control validate"
+                      required
+                    />
+                  </div>
+                    <div class="form-group mb-3">
+                    <label
+                      for="name"
+                     class="text-black" >Expirey Date
+                    </label>
+                    <input
+                      id="name"
+                      name="expiredate"
+                      type="date"
+                      class="form-control validate"
+                      required
+                    />
+                  </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-block text-uppercase">Add Coupon</button>
+              </div>
+            </form>
+      </div>
+  
+    </div>
+  </div>
+</div>
           </div>
         </div>
       </div>

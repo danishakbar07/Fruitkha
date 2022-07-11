@@ -1,13 +1,23 @@
 var db = require("../config/connections");
 var collection = require("../config/collections");
 const bcrypt = require("bcrypt");
-const { promise } = require("bcrypt/promises");
+const { promise, reject } = require("bcrypt/promises");
 var objectId = require('mongodb').ObjectId
 const Razorpay = require('razorpay');
+const collections = require("../config/collections");
+const { resolve } = require("path");
 
 var instance = new Razorpay({
   key_id: 'rzp_test_ha6TgI31z1G1Ys',
   key_secret: 'VvqGcPV08orTYX2bhKQ5a6FY',
+});
+const paypal = require('paypal-rest-sdk');
+const { log } = require("console");
+ 
+paypal.configure({
+  'mode': 'sandbox', //sandbox or live
+  'client_id': 'Abm7h6NipGq_Lv_I5eVb03NJg6iwPDWDYAym7-Cd6I-z9p009PbPIBqs6CwI1U2SzbGfFtZNsERmJ0st',
+  'client_secret': 'EBdplv_hT6MyuCPiD5I9n__cvd8nLE77P7P_JOocmne6oskSkalZpjW-KhDhc1XFiWGLu3WRvKAl6HNP'
 });
 
 
@@ -24,6 +34,8 @@ module.exports = {
                    
                   
                   resolve(data)
+              }).catch(()=>{
+                reject()
               })
   
            
@@ -89,11 +101,13 @@ module.exports = {
         })
 
     },
-    getProductCategory:(userId)=>{
+    getProductCategory:(category)=>{
         return new Promise((reslove)=>{
-         db.get().collection(collection.PRODUCTCOLLECTION).find({category:userId}).toArray().then((response)=>{
-             response
+         db.get().collection(collection.PRODUCTCOLLECTION).find({category:category}).toArray().then((response)=>{
+            console.log(response)
              reslove(response)
+         }).catch(()=>{
+            reject()
          })
         
         
@@ -225,8 +239,10 @@ getcartCount:(userId)=>{
     return new Promise((resolve,reject)=>{
         if(data.count==-1 && data.quantity==1){
             db.get().collection(collection.CARTCOLLECTION).updateOne({_id:objectId(data.cart)},{
-                $pull:{products:{item:objectId(data.product) }}
+                $pull:{products:{item:objectId(data.product ) }}
             }).then((response)=>{
+               
+              
                 resolve({removeProduct:true})
             })
 
@@ -235,7 +251,7 @@ getcartCount:(userId)=>{
                 $inc:{
                      'products.$.quantity':data.count
                 }
-            }).then(()=>{
+            }).then((response)=>{
                 resolve({status:true})
             })
     
@@ -250,6 +266,8 @@ removeProduct:(cartId,proId)=>{
             $pull:{products:{item:objectId(proId) }}
         }).then((response)=>{
             resolve()
+        }).catch(()=>{
+            reject()
         })
         
     })
@@ -319,22 +337,25 @@ cartdetails:(userId)=>{
         })
     })
 },
-placeOrder:(details,products,price)=>{
-    let status=details.paymentmethod==='COD'?'placed':'Pending'
+placeOrder:(details,payment,products,price,userid)=>{
+    let status=payment.paymentmethod==='COD'?'placed':'Pending'
     let orderObj={
         deliveryDetails:{
-            name:details.name,
-            email:details.email,
-            address:details.address,
+            
+            name:details.addresses.first,
+            email:details.addresses.email,
+            address:details.addresses.address,
 
-            phoneno:details.phone,
-            pincode:details.pincode
+            phoneno:details.addresses.phone,
+            pincode:details.addresses.pincode
 
 
         },
-       user:objectId(details.userid),
+        
+
+       user:objectId(userid),
        products:products,
-       paymentmethod:details.paymentmethod,
+       paymentmethod:payment.paymentmethod,
        price:price,
        status:status ,
        date:new Date
@@ -342,8 +363,8 @@ placeOrder:(details,products,price)=>{
     }
     return new  Promise((resolve,reject)=>{
         db.get().collection(collection.ORDERCOLLECTION).insertOne(orderObj).then((response)=>{
-            db.get().collection(collection.CARTCOLLECTION).deleteOne({user:objectId(details.userid)})
-            resolve(response)
+            db.get().collection(collection.CARTCOLLECTION).deleteOne({user:objectId(userid)})
+            resolve(response,price)
         })
 
     })
@@ -352,13 +373,15 @@ placeOrder:(details,products,price)=>{
 },
 orderlist:(orderId)=>{
     return new Promise((resolve,reject)=>{
-        db.get().collection(collection.ORDERCOLLECTION).find({_id:objectId(orderId)}).toArray().then((result)=>{
+        db.get().collection(collection.ORDERCOLLECTION).findOne({_id:objectId(orderId)}).then((result)=>{
             resolve(result)
 
         })
     })
 },
 orderProducts:(orderId)=>{
+
+    console.log(orderId)
     return new Promise(async(resolve,reject)=>{
      
         
@@ -411,17 +434,18 @@ orderProducts:(orderId)=>{
    
 },
 generateRazorpay:(orderId,total)=>{
-    console.log("thairrrrrrrrrrrrrr");
+    
     console.log(orderId);
+    
     return new Promise((resolve,reject)=>{
         var options = {
-            amount: total,  
+            amount: total*100,  
             currency: "INR",
             receipt:""+ orderId
           };
           instance.orders.create(options, function(err, order) {
-            console.log("paymentttttttttttttt");
-            console.log(order);
+            
+            console.log('');
             resolve(order)
     
           });
@@ -429,12 +453,496 @@ generateRazorpay:(orderId,total)=>{
     })
   
 },
-verifyPayment:(details)=>{
+generatePaypal:(total)=>{
+    
+    console.log(total);
     return new Promise((resolve,reject)=>{
-        
+
+  
+   
+        const create_payment_json = {
+          "intent": "sale",
+          "payer": {
+              "payment_method": "paypal"
+          },
+          "redirect_urls": {
+              "return_url": "http://localhost:3000/success",
+              "cancel_url": "http://localhost:3000/cancel"
+          },
+          "transactions": [{
+              "item_list": {
+                  "items": [{
+                      "name": "Red Sox Hat",
+                      "sku": "001",
+                      "price": total,
+                      "currency": "USD",
+                      "quantity": 1
+                  }]
+              },
+              "amount": {
+                  "currency": "USD",
+                  "total": total
+              },
+              "description": "Hat for the best team ever"
+          }]
+      };
+      
+      paypal.payment.create(create_payment_json, function (error, payment) {
+        if (error) {
+            throw error;
+        } else {
+         
+            console.log(payment);
+            resolve(payment)
+        }
+      });
+    })
+      
+      ;
+
+},
+verifyPayment:(details)=>{ 
+    return new Promise((resolve,reject)=>{
+        const crypto = require('crypto');
+       
+        const hash = crypto.createHmac('sha256', 'VvqGcPV08orTYX2bhKQ5a6FY')
+               .update(details['response[razorpay_order_id]']+'|'+ details['response[razorpay_payment_id]'])
+               .digest('hex');
+
+           if(hash==details['response[razorpay_signature]']){
+            resolve()
+           }else{
+            
+            reject()
+           }
     })
 
+},
+changePaymentstatus:(orderId)=>{
+    return new Promise((resolve,reject)=>{
+        db.get().collection(collection.ORDERCOLLECTION).updateOne({_id:objectId(orderId)},{
+            $set:{
+                status:"placed"
+            }
+        }).then(()=>{
+            resolve()
+        })
+    })
+},
+orderlists:(userId)=>{
+    return new Promise (async (resolve,reject)=>{
+        let orders= await db.get().collection(collections.ORDERCOLLECTION).aggregate([
+            {
+                $match:{user:objectId(userId)}
+            },
+           
+     
+            {
+               $lookup:{
+                from:collections.PRODUCTCOLLECTION,
+                localField:'products.item',
+                foreignField:'_id',
+                as:'product'
+                
+               },
+              
+             
+            },
+          
+            
+            
+               
+
+            
+            
+            
+        ]).toArray()
+        
+        console.log(orders);
+        
+        resolve(orders)
+    })
+},
+
+addAddress:(address,userid)=>{
+    addObj={
+        user:objectId(userid),
+        addresses:address
+    }
+    return new Promise((resolve,reject)=>{ 
+        db.get().collection(collections.ADDRESSCOLLECTION).insertOne(addObj).then((response)=>{
+            resolve(response)
+
+        })
+    })
+},
+getAddress:(userid)=>{
+    return new Promise((resolve,reject)=>{
+        db.get().collection(collection.ADDRESSCOLLECTION).find({user:objectId(userid)}).toArray().then((response)=>{
+            resolve(response)
+        })
+    })
+},
+getUser:(userid)=>{
+    return new Promise((resolve,reject)=>{
+        db.get().collection(collection.USER_COLLECTION).findOne({_id:objectId(userid)}).then((response)=>{
+            
+            resolve(response)
+        })
+    })
+},
+changePassword:(passwords,userid)=>{
+    return new Promise(async (resolve,reject)=>{
+        let user=await db.get().collection(collection.USER_COLLECTION).findOne({_id:objectId(userid)})
+        passwords.new = await bcrypt.hash(passwords.new, 10)
+        bcrypt.compare(passwords.old,user.password).then((status)=>{
+            if(status){
+               
+              
+                db.get().collection(collection.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+                    $set:{
+                        password:passwords.new
+                    }
+                }).then((response)=>{
+                    
+                    resolve({status:true})
+                })
+            }else{
+                resolve({status:false})
+            }
+
+        })
+    })
+
+
+},
+addWallet:(userid,amount)=>{
+    console.log(userid);
+    
+     money=parseInt(amount)
+    console.log(amount);
+    return new Promise(async (resolve,reject)=>{
+        console.log('varuooooo');
+       let user=await db.get().collection(collections.USER_COLLECTION).findOne({_id:objectId(userid)})
+       console.log(user);
+       if(user.wallet){
+        db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+            $inc:{
+                wallet:money
+           }
+
+
+        }).then(()=>{
+            resolve({status:true})
+        })
+
+       }else{
+
+       
+       
+        db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+            $set:{
+                wallet:money
+            }
+        }).then((response)=>{
+            console.log(response);
+            
+            resolve(response)
+        })
+    }
+
+    })
+},
+getWalletamount:(userid)=>{
+    return new Promise(async (resolve,reject)=>{
+        let user= await db.get().collection(collections.USER_COLLECTION).findOne({_id:objectId(userid)})
+        if(user.wallet){
+            db.get().collection(collections.USER_COLLECTION).findOne({_id:objectId(userid)}).then((result)=>{
+                resolve(result.wallet)
+            })
+        }else{
+            resolve(0)
+        }
+    })
+},
+reduceWallet:(userid,amount)=>{
+
+    let amound=parseInt(amount)
+    return new Promise((resolve,reject)=>{
+
+        db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+            $inc:{
+                wallet:-amound
+            }
+        }).then((response)=>{
+            resolve(response)
+        }).catch(()=>{
+            reject()
+        })
+    })
+},
+getCartoffersum:(userId)=>{
+    return new Promise(async(resolve,reject)=>{
+        let offertotal= await db.get().collection(collections.CARTCOLLECTION).aggregate([
+            {
+                $match:{user:objectId(userId)}
+            },{
+                $unwind:'$products'
+            },
+            {
+                $project:{
+                    item:'$products.item',
+                    quantity:'$products.quantity'
+                }
+            },
+            {
+                $lookup:{
+                    from:collections.PRODUCTCOLLECTION,
+                    localField:'item',
+                    foreignField:'_id',
+                    as:'product'
+                }
+            },
+            {
+                $project:{
+                    item:1,quantity:1,product:{$arrayElemAt:['$product',0]}
+                }
+            },
+            {
+                $group:{
+                    _id:null,
+                    offertotal:{$sum:{$multiply:['$quantity','$product.offerprice']}}
+                }
+            },
+        ]).toArray()
+        if(!offertotal[0]){
+            resolve(0)
+        }else{
+            resolve(offertotal[0].offertotal)
+        }
+      
+    })
+},
+getUserAddress:(addressId)=>{
+    
+    console.log(addressId);
+    return new Promise((resolve,reject)=>{
+        db.get().collection(collections.ADDRESSCOLLECTION).findOne({_id:objectId( addressId)}).then((address)=>{
+            resolve(address)
+        })
+    })
+
+},
+checkCoupon:(code,userid)=>{
+    return new Promise(async (resolve,reject)=>{
+        let check =await db.get().collection(collections.COUPONCOLLECTION).findOne({code:code})
+        
+        
+        if(check){
+            let usercoupon= await db.get().collection(collections.USER_COLLECTION).findOne({_id:objectId(userid)})
+
+            
+          let user= await db.get().collection(collections.USER_COLLECTION).findOne({_id:objectId(userid),coupon:code})
+            if(user){
+                
+               resolve({status:'already used'})
+            }else if(usercoupon.coupon){
+              
+                let cart= await db.get().collection(collections.CARTCOLLECTION).findOne({user:objectId(userid)})
+                if(cart.coupon){
+                    resolve({status:'only one'})
+                }else{
+                    db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId( userid) },{
+                        $push:{coupon:code}
+                    })
+                    db.get().collection(collections.CARTCOLLECTION).updateOne({user:objectId(userid)},{
+                        $set:{
+                            coupon:code,
+                            coupondiscount:check.offer
+                        }
+                    })
+                    resolve({status:'true'})
+                }
+
+               
+
+            }
+            else{
+               
+                db.get().collection(collections.CARTCOLLECTION).updateOne({user:objectId(userid)},{
+                    $set:{
+                        coupon:code,
+                        coupondiscount:check.offer
+                    }
+                })
+                db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+                    $set:{
+                        coupon:[code]
+                    }
+                })
+                resolve({status:'true'})
+            }
+                
+        }else{
+            resolve({status:false})
+        }
+
+    })
+},
+checkCartcoupon:(userid)=>{
+    return new Promise(async (resolve,reject)=>{
+    let cart= await db.get().collection(collections.CARTCOLLECTION).findOne({user:objectId(userid)})
+    if(cart){
+        resolve(cart)
+    }else{
+        resolve(0)
+    }
+      
+      
+    })
+
+},
+couponDetail:(code)=>{
+    return new Promise((resolve,reject)=>{
+        db.get().collection(collections.COUPONCOLLECTION).findOne(({code:code})).then((result)=>{
+            resolve(result)
+        })
+
+    })
+},
+addReferral:(referral,userid)=>{
+
+
+    return new Promise (async (resolve,reject)=>{
+        user= await db.get().collection(collections.USER_COLLECTION).findOne({referralcode:referral})
+        user2= await db.get().collection(collections.USER_COLLECTION).findOne({_id:objectId(userid)})
+        
+    
+        if(user2.wallet){
+console.log('huwaiiiiiiiiiiiii');
+resolve()
+}else{
+
+      console.log('huloooooo');
+       if(user){
+      
+        let transObj={
+            moneys:100,
+            name:user.name
+        }
+        let transObj2={
+            money:100,
+            username:user2.name
+        }
+        if(user.wallet){
+            db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(user._id)},{
+                $inc:{
+                    wallet:100
+               }
+    
+    
+            })
+             
+        }else{
+            db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(user._id)},{
+                $set:{
+                    wallet:100
+                }
+            })
+
+        }
+        if(user.transaction){
+            db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(user._id)},{
+                $push:{transaction:transObj2 }
+            })
+        }else{
+            db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(user._id)},{
+                $set:{
+                    transaction:[transObj2]
+                }
+            })
+        }
+
+        db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+            $set:{
+                wallet:100,
+                transaction:[transObj]
+            }
+        }).then(()=>{
+            resolve()
+        })
+
+       }
+       resolve()
+    
+    }
+    })
+},
+returnTransaction:(amount,userid,orderid)=>{
+    return new Promise(async (resolve,reject)=>{
+        let cancelObj={
+            amount:amount,
+            orderid:orderid
+        }
+        let user= await db.get().collection(collections.USER_COLLECTION).findOne({_id:objectId(userid)})
+        if(user.cancel){
+
+            db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+                $push:{
+                    cancel:cancelObj
+                }
+                
+             
+            })
+
+        }else{
+
+        
+        db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+            $set:{
+                cancel:[cancelObj]
+            }
+            
+         
+        })
+    }
+    resolve()
+    })
+},
+withdraw:(orderid,amount,userid)=>{
+    return new Promise(async (resolve,reject)=>{
+        let cancelObj={
+            withdrawamount:amount,
+            orderedid:orderid,
+            
+        }
+        let user= await db.get().collection(collections.USER_COLLECTION).findOne({_id:objectId(userid)})
+        if(user.cancel){
+
+            db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+                $push:{
+                    cancel:cancelObj
+                }
+                
+             
+            })
+
+        }else{
+
+        
+        db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+            $set:{
+                cancel:[cancelObj]
+            }
+            
+         
+        })
+    }
+    resolve()
+    })
 }
+
+
 }
 
 

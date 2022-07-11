@@ -1,0 +1,129 @@
+	<div class="breadcrumb-section breadcrumb-bg">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8 offset-lg-2 text-center">
+						<div class="breadcrumb-text">
+							<p>Fresh ad Organic</p>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+        <div class="container">
+
+             {{#each result}}
+            
+            
+            <div class="row bg-inf mt-5 border border-3 m-3" id="work">
+                
+                <div class="col">
+
+                <h5>shipping Address</h5>
+                <p>{{this.deliveryDetails.name}}</p>
+                <p>{{this.deliveryDetails.address}}</p>
+
+
+
+                </div>
+                  <div class="col">
+                    <h5>Phone No</h5>
+                    <p>{{this.deliveryDetails.phoneno}} </p>
+                    </div>
+                <div class="col">
+                    <h5>Payment Method</h5>
+                    <p>{{this.paymentmethod}}</p>
+
+
+                </div>
+                 <div class="col">
+                    <h5>Total Amount</h5>
+                    <p> {{this.price}}</p>
+
+
+                </div>
+                  <div class="col">
+                    <h5>Status</h5>
+                    <p class="text-success" id="f{{this._id}}" > {{this.status}}</p>
+
+
+                </div>
+                  <div class="col">
+                    <h5>cancel</h5>
+                    {{#ifCompare status 'canceled'}}
+                    <button id="{{this._id}}" type="button" class="btn btn-warning rounded-pill" onclick="cancelOrder('{{this._id}}','{{this.status}}')" disabled>cancel</button>
+                    {{else}}
+                     <button id="{{this._id}}" type="button" class="btn btn-warning rounded-pill" onclick="cancelOrder('{{this._id}}','{{this.status}}')" >cancel</button>
+{{/ifCompare}}
+
+                </div>
+                   <div class="col">
+
+                    <h5>Products</h5>
+
+                   <button type="button"   class="btn btn-warning rounded-pill" data-toggle="modal" data-target="#c{{this._id}}">
+  View Products
+  </button>
+
+
+
+
+
+                </div>
+            </div>
+              
+           
+
+         
+           
+        <div class="modal fade" id="c{{this._id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          
+         
+             
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+     
+    <div class="container">
+        <div class="row">
+
+      
+      <div class="modal-body col-12">
+        
+        
+        <div class="col-lg-4 col-md-6 col-3 text-center" >
+					<div class="single-product-item">
+						<div class="product-image">
+              {{#each product}}
+							<img src="/product-image/{{this._id}}.jpg" alt=""></a>
+						</div>
+						<h3>{{this.name}}</h3>
+					
+                        <p class=""><span>Total</span><span class="fw-bold px-2">Rs {{this.price}}</span>  </p>
+                        {{/each}}
+                        {{#each products}}
+							<p class=><span>Quantity</span> {{this.quantity}} </p>
+                 {{/each}}
+					</div>
+				</div>
+             
+            
+    
+
+      <div class="modal-footer">
+        <button type="button"  class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+        </div>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  {{/each}}
+ 
+  
+ 

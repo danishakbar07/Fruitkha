@@ -12,50 +12,53 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mx-auto h-100">
                         <li class="nav-item">
-                            <a class="nav-link active" href="/admin">
+                            <a {{#if value}} class="nav-link active" {{else}} class="nav-link " {{/if}} href="/admin" >
                                 <i class="fas fa-tachometer-alt"></i>
                                 Dashboard
                                 <span class="sr-only">(current)</span>
                             </a>
                         </li>
-                        <li class="nav-item dropdown">
-
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <i class="far fa-file-alt"></i>
-                                <span>
-                                    Reports <i class="fas fa-angle-down"></i>
-                                </span>
+                            <li {{#if v}}class="nav-item active" {{/if}}>
+                            <a class="nav-link" href="/admin/sales-report">
+                                  <i  class="far fa-file-alt"></i>
+                                Reports
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Daily Report</a>
-                                <a class="dropdown-item" href="#">Weekly Report</a>
-                                <a class="dropdown-item" href="#">Yearly Report</a>
-                            </div>
                         </li>
-                        <li class="nav-item">
+                        {{!-- <li class="nav-item dropdown">
+
+                            <a class="nav-link dropdown-toggle" href="/sales-report" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <i  class="far fa-file-alt"></i>
+                                 
+                                    Reports <i class="fas fa-angle-down"></i>
+                            
+                            </a>
+                           
+                        </li> --}}
+                        <li {{#if valu}}class="nav-item active" {{/if}}>
                             <a class="nav-link" href="/admin/product">
                                 <i class="fas fa-shopping-cart"></i>
                                 Products
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="accounts.html">
-                                <i class="far fa-user"></i>
-                                Accounts
+                        <li {{#if va}}class="nav-item active" {{/if}}>
+                            <a class="nav-link" href="/admin/orders">
+                                <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                                Orders
                             </a>
                         </li>
-                         <li class="nav-item">
+                         <li {{#if values}}class="nav-item active" {{/if}}>
                             <a class="nav-link" href="/admin/users">
                                 <i class="far fa-user"></i>
                                 Users
                             </a>
                         </li>
-                           <li class="nav-item">
+                           <li {{#if val}}class="nav-item active" {{/if}}>
                             <a class="nav-link" href="/admin/category">
                                 <i class="fa fa-book fa-fw"></i>
-                                Category
+                                Category   
+
                             </a>
                         </li>
 
@@ -85,9 +88,5 @@
             </div>
 
         </nav>
-   <script>
-       $('.nav li').on('click', function(){
-    $('.nav li').removeClass('active');
-    $(this).addClass('active');
-  });
-   </script>
+        
+  

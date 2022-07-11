@@ -1,8 +1,10 @@
  <body id="reportsPage">
- 
+      <div class="row tm-content-row">
+      
+</div>
     <div class="container mt-5">
       <div class="row tm-content-row">
-        <div class="col-sm-12 col-md-12 col-lg-8 col-xl-8 tm-block-col">
+        <div class="col-sm-6 col-md-8 col-lg-8 col-xl-8 tm-block-col">
           <div class="tm-bg-primary-dark tm-block tm-block-products">
             <div class="tm-product-table-container">
               <table class="table table-hover tm-table-small tm-product-table" id="">
@@ -12,9 +14,12 @@
                     <th scope="col">PRODUCT NAME</th>
                     <th scope="col">Category</th>
                     <th scope="col">Price</th>
-                    <th scope="col">EXPIRE DATE</th>
+                    <th scope="col">offer</th>
                     <th scope="col">Image</th>
+                    
                     <th scope="col">Edit</th>
+                    <th scope="col">delete</th>
+
                     <th scope="col">&nbsp;</th>
                   </tr>
                 </thead>
@@ -25,8 +30,18 @@
                     <td class="tm-product-name">{{this.name}}</td>
                      <td>{{this.category}}</td>
                     <td>{{this.price}}</td>
-                    
-                    <td>{{expire_date}}</td>
+                    {{#if offerprice}}
+                    <td><button type="button" style="width: 120px ;" onclick="removeOffer('{{this._id}}')" class="btn btn-primary"  >
+  Remove Offer
+</button></td>
+{{else}}
+ <td><button type="button" style="width: 120px ;" class="btn btn-primary" data-toggle="modal" data-target="#b{{this._id}}">
+  Offer
+</button></td>
+{{/if}}
+
+ 
+                  
                     <td><img style="width: 50px;height:50px" src="/product-image/{{this._id}}.jpg" alt=""></td>
                     <td><button type="submit" class="btn-warning rounded-pill"> <a href="/admin/products/edit/{{this._id}}">Edit</a></button></td>
                     <td>
@@ -34,6 +49,43 @@
                       <a href="/admin/products/delete/{{this._id}}" onclick="return confirm('confirm delete')" class="tm-product-delete-link">
                         <i class="far fa-trash-alt tm-product-delete-icon"></i>
                       </a>
+                      <div class="modal fade" id="b{{this._id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/applyoffer/{{this._id}}" method="post">
+       <div class="form-group mb-3">
+                    <label
+                      for="category"
+                      >Category</label
+                    >
+                    <select
+                      class="custom-select tm-select-accounts"
+                      id="category"
+                      name="offer"
+                    >
+                      <option  selected>Select category</option>
+                      {{#each ../offers }}
+                      <option  value="{{this._id}}">{{this.name}}</option>
+
+                      {{/each}}
+                     
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
                          {{/each}}
                     </td>
                   </tr>
@@ -45,14 +97,132 @@
             <a
               href="/admin/product/new-product"
               class="btn btn-primary btn-block text-uppercase mb-3">Add new product</a>
-            <button class="btn btn-primary btn-block text-uppercase">
-              Delete selected products
-            </button>
+            
+          </div>
+
+        </div>
+
+          <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4 tm-block-col">
+          <div class="tm-bg-primary-dark tm-block tm-block-product-categories">
+            <h2 class="tm-block-title">Product Categories</h2>
+            <div class="tm-product-table-container">
+              <table class="table tm-table-small tm-product-table">
+                
+                <tbody>
+                  {{#each offers}}
+                  <tr>
+                    <td class="tm-product-name">{{this.name}}</td>
+                      <td class="tm-product-name">{{this.offer}}</td>
+
+                    <td class="text-center"><button type="submit" class="btn-warning rounded-pill"> <a href="/admin/categories/edit/{{this._id}}">Edit</a></button></td>
+                  <td>
+                    
+                      <a href="/admin/category/delete/{{this._id}}" onclick="return confirm('confirm delete')" class="tm-product-delete-link">
+                        <i class="far fa-trash-alt tm-product-delete-icon"></i>
+                      </a>
+                         
+                    </td>
+                  </tr>
+                  {{/each}}
+             
+                 
+                </tbody>
+              </table>
+            </div>
+            <!-- table container -->
+           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Add offer
+</button>
+              
+              
+            
           </div>
         </div>
-        
       </div>
     </div>
+      </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+    
+    
+        <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
+          <div class="tm-bg-primary-dark tm-block tm-block-h-auto" id="">
+            <div class="row">
+              <div class="col-12">
+                <h2 class="tm-block-title d-inline-block"> New Offer</h2>
+              </div>
+            </div>
+            <div class="row tm-edit-product-row">
+              <div class="col-xl-6 col-lg-6 col-md-12">
+                <form action="/admin/new-offer" method="post" class="tm-edit-product-form"   >
+                  <div class="form-group mb-3">
+                    <label
+                      for="name"
+                      >Offer Name
+                    </label>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      class="form-control validate"
+                      required
+                    />
+                  </div>
+                   <div class="form-group mb-3">
+                    <label
+                      for="name"
+                      >Offer percentage
+                    </label>
+                    <input
+                      id=""
+                      name="offer"
+                      type="number"
+                      class="form-control validate"
+                      required
+                    />
+                  </div>
+                 
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-block text-uppercase">Add Offer</button>
+              </div>
+            </form>
+            </div>
+          </div>
+        </div>
+      
+    
+      </div>
+     
+    </div>
+  </div>
+</div>
+    
+    <div class="container mt-5">
+       <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Action
+  </button>
+ 
+  
+</div>
+      
+    <footer class="tm-footer row tm-mt-small">
+      <div class="col-12 font-weight-light">
+        <p class="text-center text-white mb-0 px-4 small">
+          Copyright &copy; <b>2018</b> All rights reserved. 
+          
+          Design: <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Template Mo</a>
+        </p>
+      </div>
+    </footer>
+
     <footer class="tm-footer row tm-mt-small">
       <div class="col-12 font-weight-light">
         <p class="text-center text-white mb-0 px-4 small">
@@ -71,3 +241,53 @@
         });
       });
     </script>
+    <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Dropdown button
+  </button>
+      	 <script>
+    let errorName = document.getElementById('names')
+    let errorDescription = document.getElementById('discriptions')
+  
+  
+    
+    function validateName() {
+		
+        const name = document.getElementById('name').value;
+        if (name == "") {
+            errorName.innerHTML = 'required'
+            return false
+        }  
+        if (!name.match(/^[a-zA-Z]*$/)) {
+            errorName.innerHTML = 'invalid'
+            return false
+        }
+        errorName.innerHTML = ''
+        return true
+
+    }
+   
+	function validateDiscription(){
+		const address=document.getElementById('discription').value
+		if(address==''){
+			errorDescription.innerHTML='cannot be empty'
+			return false
+
+		}
+		errorAddress.innerHTML=null
+		return true
+	}
+   
+
+
+
+ 
+    function validation() {
+        if (validateName()  && validateDiscription() ) {
+            
+         return true
+        }
+        return false
+    }
+	</script>
+      

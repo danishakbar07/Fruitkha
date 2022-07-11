@@ -1,9 +1,15 @@
-var express = require('express');
-const otp = require('../config/otp');
+const express = require('express');
+// const otp = require('../config/otp');
+const shortid = require('shortid');
 
 const userHelper = require('../helpers/user-helper');
-var router = express.Router();
-var client = require('twilio')(otp.accountSID, otp.authToken)
+const router = express.Router();
+require('dotenv').config()
+const SSID=process.env.serviseSID
+const ASID= process.env.accountSID
+const AUID= process.env.authToken
+
+const client = require('twilio')(ASID, AUID)
     const verifyLogin= (req,res,next)=>{
       if(req.session.login){
         res.redirect('/')
@@ -28,6 +34,7 @@ router.get('/', function(req, res, next) {
   
 });
 router.get('/login',verifyLogin,(req,res)=>{
+
  
     res.render('user/login',{show:req.session.show,block:req.session.block})
     req.session.show=false
@@ -37,8 +44,9 @@ router.get('/login',verifyLogin,(req,res)=>{
  
 })
 router.post('/',(req,res)=>{
+   req.body.referralcode = shortid.generate();
   req.session.userr = req.body
-  //console.log(req.body);
+  
   if(req.body.email&&req.body.password){userHelper.checkUser(req.body).then((result)=>{
     if(result.status){
       req.session.check=true
@@ -49,21 +57,26 @@ router.post('/',(req,res)=>{
 
       req.session.phone=Number
       client.verify
-      .services(otp.serviseSID)
+      .services(SSID)
       .verifications
       .create({
         to:`+91${Number}`,
         channel:'sms'
-      })
-      .then((data)=>{
+      }) .then((data)=>{
       
        
       
        let user=req.session.userr
         
-        res.render('user/otp', { user })
+        res.redirect('/users/otp')
       })
+      // userHelper.doSignup(req.session.userr).then((response)=>{
 
+      //   res.redirect('/users/login')
+       
+      // }).catch(()=>{
+      //   res.redirect('/error')
+      // })
    
     }
     })
@@ -78,11 +91,17 @@ router.post('/',(req,res)=>{
 router.post('/login',(req,res)=>{
   userHelper.doLogin(req.body).then((response) => {
     
+    
       if (response.status) {
         if(response.user.status){
+
           req.session.user=response.user
           req.session.login=true
-        
+        if(response.user.referral ){
+          userHelper.addReferral(response.user.referral,req.session.user._id).then(()=>{
+            
+          })
+        }
           
     
           res.redirect("/");
@@ -111,19 +130,19 @@ router.get('/otp',verifyLogin,(req,res)=>{
 })
 router.post('/otp-varify',(req,res)=>{
    var Number = req.session.phone
-  console.log( "itho"+Number);
+  
   var otps = req.body.number
   
   
 
   client.verify
-    .services(otp.serviseSID)
+    .services(SSID)
     .verificationChecks.create({
       to: `+91${Number}`,
       code: otps
     })
     .then((data) => {
-      console.log(data.status + "otp status/*/*/*/");
+      
       if(data.status=='approved'){
         userHelper.doSignup(req.session.userr).then((response)=>{
 
@@ -149,7 +168,9 @@ router.get('/add-to-cart/:id',(req,res)=>{
       
     })
   }else{
-    res.redirect('/users/login')
+    res.json({
+      status:false
+    })
   }
  
 })

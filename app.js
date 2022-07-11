@@ -1,11 +1,12 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var db=require("./config/connections")
-var session= require('express-session')
-var fileUpload = require('express-fileUpload') 
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const db=require("./config/connections")
+const session= require('express-session')
+const fileUpload = require('express-fileUpload') 
+
 
 
 db.connect((err)=>{
@@ -15,19 +16,29 @@ db.connect((err)=>{
     console.log("Database connected successfully");
   }
   })
+  
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var adminrouter = require('../Fruitka/routes/admin')
-var hbs = require('express-handlebars');
-var app = express();
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const adminrouter = require('../Fruitka/routes/admin')
+const hbs = require('express-handlebars');
+const app = express();
+const helpers=require('handlebars-helpers')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-app.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'layout',layoutDir:__dirname+'/views/layout/',partialsDir:__dirname+'/views/partials/',adminDir:__dirname+''}))
-
-
+// app.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'layout',layoutDir:__dirname+'/views/layout/',partialsDir:__dirname+'/views/partials/',adminDir:__dirname+''}))
+app.engine("hbs",hbs.engine({helpers: {
+  inc: function (value, options) {
+    return parseInt(value) + 1;}},extname:'hbs',defaultLayout:'layout',layoutDir:__dirname+'/views/layout',partialsDir:__dirname+'/views/partials',adminDir:__dirname+''}))
+const HBS = hbs.create({});
+HBS.handlebars.registerHelper("ifCompare", function (v1, v2, options) {
+  if (v1 === v2) {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -52,8 +63,8 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  // res.status(err.status || 500);
+  res.render('user/error');
 });
 
 module.exports = app;

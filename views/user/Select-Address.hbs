@@ -1,0 +1,168 @@
+<div class="checkout-section mt-150 mb-150">
+		<div class="container">
+			<div class="row">
+                <h2 class="text-center mb-3">Please select  Your Address </h2>
+                {{#each address}}
+                <div class="card col-4 m-2 shadow p-3 mb-5 bg-body rounded ">
+  <div class="card-body ">
+    <form action="/save-address/{{this._id}}" method="post">
+
+<div class="col-6 fw-bold">
+<input type="text"  name="address"  style="border: 0; background-color: #fff;">
+<label >{{this.addresses.name}} , {{addresses.address}},
+{{addresses.email}}, {{addresses.phone}}, {{addresses.pincode}}
+										
+ </label><br>
+		  <button type="submit" class="btn btn-warning float-right mt-2">Choose</button>							  
+</div>
+
+    </form>
+  </div>
+</div>
+ {{/each}}
+				<div class="col-lg-8">
+					<div class="checkout-accordion-wrap">
+						<div class="accordion" id="accordionExample">
+						  <div class="card single-accordion">
+						    <div class="card-header" id="headingOne">
+						      <h5 class="mb-0">
+						        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						          Shipping  Address
+						        </button>
+						      </h5>
+						    </div>
+
+						    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+						      <div class="card-body">
+						        <div class="billing-address-form">
+						        	<form action="/new-address" method="post"  >
+									<h3>Add Address</h3>
+									
+                                    {{!-- <input type="radio" id="css" name="fav_language" value="CSS">
+                                     <label for="css">CSS</label><br>
+                                   <input type="radio" id="javascript" name="fav_language" value="JavaScript">
+                                    <label for="javascript">JavaScript</label> --}}
+									<h3></h3>
+						        		<p><input type="text" placeholder="Name" name="name" id="name" onkeyup="validateName()"></p>
+										 <p class="text-danger" id="nameerror"></p>
+						        		<p><input type="email" placeholder="Email" name="email" id="email" onkeyup="validEmail()"></p>
+											 <p class="text-danger" id="emailerr"></p>
+						        		<p><input type="text" placeholder="Address" name="address" id="address" onkeyup="validateAddress()"></p>
+										<p class="text-danger" id="addresserr"></p>
+						        		<p><input type="tel" placeholder="Phone" name="phone" id="phone" onkeyup="validateNumber()"></p>
+											<p class="text-danger" id="numbererr"></p>
+						                <p><input type="tel" placeholder="pincode" name="pincode" id="pincode" onkeyup="validatePincode()"></p>
+										<p class="text-danger" id="pincodeerr"></p>
+
+										
+						
+						
+						        	
+						        </div>
+						      </div>
+						    </div>
+						  </div>
+						 
+				
+						 
+						</div>
+ 	<button  class="mt-5 boxed-btn bg-warning rounded-pill float-right"  type="submit" onclick="return validation()" style="border:none ;">Choose</button>
+						  </form>
+					</div>
+				</div>
+
+				<div class="col-lg-4">
+					<div class="order-details-wrap">
+					
+                       
+						
+					
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	 <script>
+    var errorName = document.getElementById('nameerror')
+    var errorEmail = document.getElementById('emailerr')
+    var errorAddress = document.getElementById('addresserr')
+    var errorNumber = document.getElementById('numbererr')
+    var errorpincode= document.getElementById('pincodeerror')
+    function validateName() {
+		console.log("hhhhhhhhhhhhh")
+        const name = document.getElementById('name').value;
+        if (name == "") {
+            errorName.innerHTML = 'Enter your Name'
+            return false
+        }  
+        if (!name.match(/^[a-zA-Z]*$/)) {
+            errorName.innerHTML = 'invalid'
+            return false
+        }
+        errorName.innerHTML = ''
+        return true
+
+    }
+    function validEmail() {
+        const name = document.getElementById('email').value
+        if (name == "") {
+            errorEmail.innerHTML = "enter you email address"
+            return false
+
+
+        }
+        if (!name.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/)) {
+            errorEmail.innerHTML = 'enter a proper email adress'
+            return false
+        }
+
+        errorEmail.innerHTML = ''
+        return true
+    } 
+	function validateAddress(){
+		const address=document.getElementById('address').value
+		if(address==''){
+			errorAddress.innerHTML='cannot be empty'
+			return false
+
+		}
+		errorAddress.innerHTML=null
+		return true
+	}
+    function validateNumber(){
+      const name = document.getElementById('phone').value
+      if (name==""){
+        errorNumber.innerHTML="enter your number"
+       return false 
+      }
+      if(name.length<10){
+        errorNumber.innerHTML="invalid number"
+        return false
+      }
+      errorNumber.innerHTML=null
+      return true
+    }
+	function validatePincode(){
+		const pincode=document.getElementById('pincode').value
+		if(pincode==''){
+			errorpincode.innerHTML='cannot be empty'
+			return false
+		}else if(pincode.length<6){
+			errorpincode.innerHTML='it should be 6 digit'
+			return false
+
+		}
+		errorpincode.innerHTML=null
+		return true
+	}
+
+
+ 
+    function validation() {
+        if (validateName() && validEmail() && validateAddress() && validateNumber() && validatePincode()) {
+            
+         return true
+        }
+        return false
+    }
+	</script>

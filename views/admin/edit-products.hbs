@@ -12,6 +12,7 @@
               <div class="col-xl-6 col-lg-6 col-md-12">
                 <form action="/admin/product/edit-product/{{product._id}}" method="post" class="tm-edit-product-form" enctype="multipart/form-data"  >
                   <div class="form-group mb-3">
+                     <p class="text-danger" id="name"></p>
                     <label
                       for="name"
                       >Product Name
@@ -22,16 +23,17 @@
                       type="text"
                       class="form-control validate"
                       value="{{product.name}}"
-                      required
+                      onchange="validateName()"
                     />
                   </div>
                   <div class="form-group mb-3">
+                      <p class="text-danger" id="discriptions"></p>
                     <label
                       for="description"
                       >Description</label
                     >
                     
-                    <input type="text" class="form-control validate" name="description" value="{{product.description}}" aria-rowcount="3">
+                    <input type="text" class="form-control validate" id="discription" name="description" value="{{product.description}}" aria-rowcount="3" onkeyup="validateDiscription()">
                   </div>
                     <div class="form-group mb-3">
                     <label
@@ -45,6 +47,7 @@
                       class="custom-select tm-select-accounts"
                       id="category"
                       name="category"
+                      required
                     >
                   
                       <option >{{product.category}}</option>
@@ -54,20 +57,7 @@
                     </select>
                   </div>
                   <div class="row">
-                      <div class="form-group mb-3 col-xs-12 col-sm-6">
-                          <label
-                            for="expire_date"
-                            >Expire Date
-                          </label>
-                          <input
-                            id="expire_date"
-                            name="expire_date"
-                            type="text"
-                            class="form-control validate"
-                            value="{{product.expire_date}}"
-                            data-large-mode="true"
-                          />
-                        </div>
+                      
                         <div class="form-group mb-3 col-xs-12 col-sm-6">
                           <label
                             for="stock"
@@ -88,14 +78,14 @@
                               <img src="/product-image/{{product._id}}.jpg" alt="" style="width:100px;height:auto" >
                              </div>
                             
-                             <input type="file" name="image" class="form-control validate" >
+                             <input type="file" name="image" class="form-control validate"  >
                          </div>
                   </div>
                   
               </div>
               
               <div class="col-12">
-                <button type="submit" class="btn btn-primary btn-block text-uppercase">Update Product Now</button>
+                <button type="submit" onclick="return validation()" class="btn btn-primary btn-block text-uppercase">Update Product Now</button>
               </div>
             </form>
             </div>
@@ -112,19 +102,62 @@
         </p>
         </div>
     </footer> 
-
+ <script defer src="https://cdn.crop.guide/loader/l.js?c=GVVLNV"></script>
 
     <script src="jquery-ui-datepicker/jquery-ui.min.js"></script>
     <!-- https://jqueryui.com/download/ -->
- 
+
     <script>
       $(function() {
         $("#expire_date").datepicker();
       });
-
+       </script>
       
-      
 
-      <script>
-        
+    
+        	 <script>
+    let errorName = document.getElementById('names')
+    let errorDescription = document.getElementById('discriptions')
+  
+  
+    
+    function validateName() {
+		
+        const name = document.getElementById('name').value;
+        if (name == "") {
+            errorName.innerHTML = 'required'
+            return false
+        }  
+        if (!name.match(/^[a-zA-Z]*$/)) {
+            errorName.innerHTML = 'invalid'
+            return false
+        }
+        errorName.innerHTML = ''
+        return true
+
+    }
+   
+	function validateDiscription(){
+		const address=document.getElementById('discription').value
+		if(address==''){
+			errorDescription.innerHTML='cannot be empty'
+			return false
+
+		}
+		errorAddress.innerHTML=null
+		return true
+	}
+   
+
+
+
+ 
+    function validation() {
+        if (validateName()  && validateDiscription() ) {
+            
+         return true
+        }
+        return false
+    }
+	</script>
       

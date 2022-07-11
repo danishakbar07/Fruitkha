@@ -1,0 +1,142 @@
+
+
+ 
+ <div class="container">
+    <div class="row">
+    <div class=" mt-5 md-col-4 ">
+      <div class="card bg-dark  ">
+        <button class="rounded-pill btn-success col-sm-2 col-md-2" id="EXCEL">excel</button>
+        <button class="rounded-pill btn-success col-sm-2 col-md-2" id="PDF">pdf</button>
+  <div class="card-body">
+    
+     <h4>Orders</h4>
+    <form action="/admin/sales-report" class=" " method="post">
+     <label
+                      for="category"
+                      ></label
+                    >
+                    <select
+                      class="custom-select tm-select-accounts"
+                      id="category"
+                      name="type"
+                    >
+                      <option  selected>Select type</option>
+                      
+                      <option  value="placed">placed</option>
+                      <option  value="shipped">shipped</option>
+                      <option  value="delivered">delivered</option>
+                      <option  value="canceled">canceled</option>
+
+                      
+                     
+                    </select>
+      <label for="" class="mx-2 text-white "> From </label>
+      <input style="color:#ec780c" class="mt-3" type="date" name="from"><br>
+      <label  class="mx-2  text-white  " for="" > To </label>
+      <input style="color:#ec780c " class="input-lg mx-3 mt-3" type="date" name="to"><br>
+      <button class="mx-5 mt-3 btn btn-warning btn-xs rounded-pill mx-" style=" box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)" type="submit">Submit</button>
+    </form>
+      </div>
+</div>
+
+  </div>
+
+
+
+
+<div class="table-responsive pb-5">
+  <table id="myTable" class="table table-bordered table-hover  table-dark mb-5 mt-3   ">
+  <thead>
+    <tr>
+      
+      <th scope="col">Date</th>
+      <th scope="col">UserName</th>
+      <th scope="col">Phone No</th>
+	  <th scope="col">Address</th>
+     <th scope="col">products</th>
+	  
+       <th scope="col">Total</th>
+        <th scope="col">Status</th>
+
+
+
+      
+
+   
+    </tr>
+  </thead>
+  <tbody>
+     {{#each sales}}
+    <tr>
+     
+      <td>{{date}}</td>
+      {{#each user}}
+      <td>{{this.name}}</td>
+      {{/each}}
+      <td>{{deliveryDetails.phoneno}}</td>
+	   <td>{{deliveryDetails.address}}</td>
+    
+     <td > {{#each product}} {{this.name}} &nbsp;   {{/each}}</td>    
+    
+      <td class="fw-bold">Rs {{price}}</td>
+
+   {{#ifCompare status 'canceled'}}
+
+      <td><div id={{this._id}} class="text-danger fw-bolder fs-5">{{status}} </div></td>
+     {{else}} 
+      {{#ifCompare status 'shipped'}}
+        <td><div id={{this._id}} class="text-warning fw-bolder fs-5">{{status}} </div></td>
+     {{else}}
+       {{#ifCompare status 'delivered'}}
+
+        
+       <td><div id={{this._id}} class="text-success fw-bolder fs-5">{{status}} </div></td>
+       {{else}}
+        {{#ifCompare status 'placed'}}
+         <td><div id={{this._id}} class="text-success fw-bolder fs-5">{{status}} </div></td>
+{{/ifCompare}}
+{{/ifCompare}}
+{{/ifCompare}}
+{{/ifCompare}}
+     
+                          
+               
+    </tr>
+
+
+      {{/each}}
+ 
+  </tbody>
+ 
+
+ 
+</table>
+</div>
+
+    </div>
+ </div>
+<script>
+   window.onload=function(){
+    
+  console.log(window);
+  document.getElementById('EXCEL').addEventListener('click',()=>{ 
+    var table2excel = new Table2Excel();
+    table2excel.export(document.querySelectorAll("#myTable"));
+  })
+   document.getElementById('PDF').addEventListener('click',()=>{
+    const pdf=this.document.getElementById('myTable')
+    console.log(pdf);
+    console.log(window);
+    let opt = {
+      margin:       0,
+      filename:     'Report.pdf',
+      image:        { type: 'jpg', quality: 0.98 },
+      html2canvas:  { scale: 4 },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+    };
+    
+    html2pdf().from(pdf).set(opt).save();
+  }) 
+}
+</script>
+

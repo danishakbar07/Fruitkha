@@ -56,6 +56,11 @@
                       <label class="form-label" for="form3Example4cd">Repeat your password</label>
                     </div>
                   </div>
+                     <div class="form-outline flex-fill mb-0">
+                      <input type="text" id="referral" class="form-control " name="referral"   />
+                      <p class="text-danger " id="nameerr"></p>
+                      <label class="form-label" for="form3Example1c">Referral Code</label>
+                    </div>
 
                   <div class="form-check d-flex justify-content-center mb-5">
                     <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
@@ -98,6 +103,7 @@
         }  
         if (!name.match(/^[a-zA-Z]*$/)) {
             errorName.innerHTML = 'invalid'
+            
             return false
         }
         errorName.innerHTML = null
@@ -163,7 +169,7 @@
         if (!validateName() && !validEmail() && !validPassword() && !validateNumber() && !validconformPassword) {
             return false
         }else if(!validateName() || !validEmail() || !validPassword() || !validateNumber() || !validconformPassword){
-          return false
+           return false
         }
         return true
     }

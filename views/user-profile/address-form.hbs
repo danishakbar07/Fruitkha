@@ -1,0 +1,224 @@
+<div class="breadcrumb-section breadcrumb-bg">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8 offset-lg-2 text-center">
+						<div class="breadcrumb-text">
+							<p>Fresh ad Organic</p>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+<div class="container my-5 py-5">
+
+  <!--Section: Design Block-->
+  <section>
+
+    <div class="row">
+     
+
+      <div class="col-md-8 mb-4">
+        <div class="card mb-4">
+          <div class="card-header py-3">
+            <h5 class="mb-0 text-font text-uppercase">Delivery address</h5>
+          </div>
+          <div class="card-body">
+            <form action="/address-form" method="post">
+
+              <div class="row mb-4">
+                <div class="col">
+                    
+                  <div class="form-outline">
+                    
+                      <p class="text-danger" id="names"></p>
+                    <input type="text" id="name" name="name" class="form-control" onkeyup="validateName()" />
+                    <label class="form-label"  for="form11Example1">First name</label>
+                  </div>
+                </div>
+                <div class="col">
+                 
+                </div>
+              </div>
+
+              <!-- Text input -->
+            
+  <div class="form-outline mb-4">
+                <p class="text-danger" id="nameerror"></p>
+                <input type="emails" id="email" name="email" class="form-control" onkeyup="validateEmail()" />
+                <label class="form-label" for="form11Example5">Email</label>
+              </div>
+              <!-- Text input -->
+              <div class="form-outline mb-4">
+                <p class="text-danger" id="addresses"></p>
+                <input type="text" id="address" name="address" class="form-control" onkeyup="validateAddress()" />
+                <label class="form-label" for="form11Example4">Address</label>
+              </div>
+
+              <!-- Email input -->
+            
+
+              <!-- Number input -->
+              <div class="form-outline mb-4">
+                 <p class="text-danger" id="numbers"></p>
+
+                <input type="number" id="number" name="phone" class="form-control" onkeyup="validateNumber()" />
+                <label class="form-label" for="form11Example6">Phone</label>
+              </div>
+               <div class="form-outline mb-4">
+                 <p class="text-danger" id="pincodes"></p>
+                <input type="number" id="pincode" name="pincode" class="form-control" onkeyup="validatePincode()" />
+                <label class="form-label" for="form11Example6">Pincode</label>
+              </div>
+
+              <!-- Message input -->
+            
+
+              <!-- Checkbox -->
+             
+          
+          </div>
+
+        </div>
+        <div class="text-center">
+          <button type="submit" onclick="return validation()" class="btn button-order col-md-10">Add Address</button>
+        </div>
+          </form>
+
+      </div>
+
+
+
+
+
+
+    </div>
+
+  </section>
+  <!--Section: Design Block-->
+
+</div>
+<style>
+    .text-font{
+font-family: futura-pt,Tahoma,Geneva,Verdana,Arial,sans-serif;
+font-weight: 700;
+letter-spacing: .156rem;
+font-size: 1.125rem;
+}
+.text-price{
+padding: 0 .625rem;
+font-family: futura-pt,Tahoma,Geneva,Verdana,Arial,sans-serif;
+font-style: normal;
+font-size: .75rem;
+font-weight: 700;
+line-height: .813rem;
+letter-spacing: 1.6px;
+}
+.text-descriptions{
+font-family: futura-pt,Tahoma,Geneva,Verdana,Arial,sans-serif;
+font-style: normal;
+font-size: .75rem;
+font-weight: 400;
+line-height: 1.125rem;
+margin: .313rem 0 .938rem;
+padding: 0 .625rem;
+}
+.button-color{
+color: #4e4e4e ;
+border-color: #4e4e4e ;
+}
+.button-order{
+font-family: futura-pt,Tahoma,Geneva,Verdana,Arial,sans-serif;
+font-style: normal;
+font-size: .75rem;
+font-weight: 700;
+background-color: hsl(90, 40%, 50%);
+color: white;
+}
+</style>
+
+	 <script>
+    var errorName = document.getElementById('names')
+    var errorEmail = document.getElementById('emails')
+    var errorAddress = document.getElementById('addresses')
+    var errorNumber = document.getElementById('numbers')
+    var errorpincode= document.getElementById('pincodes')
+    function validateName() {
+		
+        const name = document.getElementById('name').value;
+        if (name == "") {
+            errorName.innerHTML = 'Enter your Name'
+            return false
+        }  
+        if (!name.match(/^[a-zA-Z]*$/)) {
+            errorName.innerHTML = 'invalid'
+            return false
+        }
+        errorName.innerHTML = ''
+        return true
+
+    }
+    function validateEmail() {
+        const name = document.getElementById('email').value
+        if (name == "") {
+            errorEmail.innerHTML = "enter you email address"
+            return false
+
+
+        }
+        if (!name.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/)) {
+            errorEmail.innerHTML = 'enter a proper email adress'
+            return false
+        }
+
+        errorEmail.innerHTML = ''
+        return true
+    } 
+	function validateAddress(){
+		const address=document.getElementById('address').value
+		if(address==''){
+			errorAddress.innerHTML='cannot be empty'
+			return false
+
+		}
+		errorAddress.innerHTML=null
+		return true
+	}
+    function validateNumber(){
+      const name = document.getElementById('phone').value
+      if (name==""){
+        errorNumber.innerHTML="enter your number"
+       return false 
+      }
+      if(name.length<10){
+        errorNumber.innerHTML="invalid number"
+        return false
+      }
+      errorNumber.innerHTML=null
+      return true
+    }
+	function validatePincode(){
+		const pincode=document.getElementById('pincode').value
+		if(pincode==''){
+			errorpincode.innerHTML='cannot be empty'
+			return false
+		}else if(pincode.length<6){
+			errorpincode.innerHTML='it should be 6 digit'
+			return false
+
+		}
+		errorpincode.innerHTML=null
+		return true
+	}
+
+
+ 
+    function validation() {
+        if (validateName() && validateEmail() && validateAddress() && validateNumber() && validatePincode()) {
+            
+         return true
+        }
+        return false
+    }
+	</script>

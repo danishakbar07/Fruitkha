@@ -5,7 +5,7 @@
     
 
 
-<table class="table mt-5 table table-hover tm-table-small tm-product-table" id="myTable">
+<table class="table mt-5 table table-hover tm-table-small tm-product-table table-dark" id="myTable">
   <thead>
     <tr>
    
@@ -34,9 +34,9 @@
         {{/if}}
        {{#if this.status}}
 
-       <td>   <a onclick="userBlock('{{this._id}}')"   class="btn btn-outline-danger rounded-pill" >block</a></td>
+       <td>   <a onclick="userBlock('{{this._id}}')" style="width: 110px; "  class="btn btn-outline-danger rounded-pill" >block</a></td>
        {{else}}
-       <td>   <a onclick="userUnblock('{{this._id}}')"  class="btn btn-outline-success btn-sm rounded-pill" >unblock</a></td>
+       <td>   <a onclick="userUnblock('{{this._id}}')"  style="width: 110px; " class="btn btn-outline-success btn-sm rounded-pill" >unblock</a></td>
        {{/if}}
       
     </tr>

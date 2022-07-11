@@ -9,6 +9,9 @@
   
 <script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="Scripts/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/e8c3420da2.js" crossorigin="anonymous"></script>
+
+
 
 	<!-- title -->
 
@@ -16,8 +19,8 @@
 	    <title>Product Admin - Dashboard HTML Template</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
     <!-- https://fonts.google.com/specimen/Roboto -->
-    <link rel="stylesheet" href="/product-admin-master/css/fontawesome.min.css">
-    <!-- https://fontawesome.com/ -->
+    
+ 
     <link rel="stylesheet" href="/product-admin-master/css/bootstrap.min.css">
     <!-- https://getbootstrap.com/ -->
     <link rel="stylesheet" href="/product-admin-master/css/templatemo-style.css">
@@ -75,7 +78,18 @@
 	<script src="/javascripts/script.js"></script>
 		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 		<script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+ {{!-- <script src="https://code.jquery.com/jquery-migrate-3.0.0.js"></script>  
+ <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script> --}}
+ 
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/product-admin-master/js/table2excel.js"></script>
 		<script>
+      
   $(document).ready( function () {
     $('#myTable').DataTable();
 } );
@@ -103,7 +117,7 @@ addRowCount('.table');
 
 </script>
 		
-    <script>
+     <script>
         Chart.defaults.global.defaultFontColor = 'white';
         let ctxLine,
             ctxBar,
@@ -132,7 +146,7 @@ addRowCount('.table');
         $("#expire_date").datepicker();
       });
 
-    </script>
+    </script> 
 	{{else}}
 
     <script src="/assets/js/jquery-1.11.3.min.js"></script>

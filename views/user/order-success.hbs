@@ -32,8 +32,9 @@
     <tr>
       
       <th scope="col">Date</th>
-      <th scope="col">UserName</th>
-      <th scope="col">Phone No</th>
+     
+	  <th scope="col">Address</th>
+	  
        <th scope="col">Total</th>
         <th scope="col">Status</th>
         <th scope="col"></th>
@@ -43,14 +44,14 @@
   </thead>
   <tbody>
     <tr>
-      {{#each orders}}
-      <td>{{date}}</td>
-      <td>{{deliveryDetails.name}}</td>
-      <td>{{deliveryDetails.phoneno}}</td>
-      <td class="fw-bold">Rs {{price}}</td>
-      <td class="text-success fw-bold">{{status}}</td>
+      
+      <td>{{orders.date}}</td>
+    
+	   <td>{{orders.deliveryDetails.address}}</td>
+      <td class="fw-bold"><i class="fa-solid fa-indian-rupee-sign"></i> {{orders.price}}</td>
+      <td class="text-success fw-bold">{{orders.status}}</td>
       <td><a href=""></a></td>
-      {{/each}}
+      
     </tr>
  
   </tbody>
@@ -65,7 +66,7 @@
 						</div>
 						<h3>{{this.product.name}}</h3>
 						<p class=><span>Quantity</span> {{this.quantity}} </p>
-                        <p class=""><span>Total</span><span class="fw-bold px-2">Rs {{this.total}}</span>  </p>
+                        <p class=""><span>Total</span><span class="fw-bold px-2"><i class="fa-solid fa-indian-rupee-sign"></i> {{this.total}}</span>  </p>
 						
 					</div>
 				</div>

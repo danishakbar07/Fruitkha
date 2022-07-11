@@ -7,7 +7,8 @@ module.exports={
     CATEGORYCOLLECTION:"categories",
     CARTCOLLECTION : "carts",
     ORDERCOLLECTION:'orders',
-    TWILIOTP:{
-        
-    }
+    ADDRESSCOLLECTION:'address',
+    OFFERCOLLECTION:'offer',
+    COUPONCOLLECTION:'coupon'
+   
 }

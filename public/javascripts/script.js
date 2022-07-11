@@ -1,13 +1,19 @@
 
 
 
+
+
 function addtoCart(proId){
-    swal("Added", "Your product has been added to the cart", "success")
+    
+    
     $.ajax({
+      
         url:'/users/add-to-cart/'+proId,
         method:'get',
+        
         success:(response)=>{
             if(response.status){ 
+                 swal("Added", "Your product has been added to the cart", "success")
                
                     let count=$("#cart-count").html()
                     count =parseInt(count)+1
@@ -18,11 +24,27 @@ function addtoCart(proId){
 
                
             }
+            else{
+                location.href='/users/login'
+            }
         }
         
     })
 
 }
+function checkCart(){
+    $.ajax({
+        url:'/select-addresses',
+        method:'get',
+        success:(response)=>{
+             if(response.status){
+                swal("There is no products in the Cart!!!", "error");
+             }else{
+                location.href='/select-address'
+             }
+        }
+    })
+} 
 function changeQuantity(cartId,proId,productName,price,count){
     let quantity=parseInt(document.getElementById(proId).innerHTML)
     // swal({
@@ -60,13 +82,13 @@ function changeQuantity(cartId,proId,productName,price,count){
                        
         
                     }else{
-                        console.log(response.total);
-                        response.total=response.total+50
-                        console.log(response.total);
+                        
+                       
                         document.getElementById(proId).innerHTML=quantity+count
                         document.getElementById(productName).innerHTML=price*(quantity+count)
                         document.getElementById('subtotala').innerHTML=response.subtotal
-                        document.getElementById('totala').innerHTML=response.total
+                        document.getElementById('totala').innerHTML=response.subtotal
+                        document.getElementById('offertotal').innerHTML=response.fulloffertotal
                     }
                 }
             })
@@ -147,34 +169,45 @@ function changeQuantity(cartId,proId,productName,price,count){
   }
   $('#checkout-form').submit((e)=>{
     e.preventDefault()
+    
     $.ajax({
         url:'/checkout',
         method:'post',
         data:$('#checkout-form').serialize(),
         success:(response)=>{
-            if(response.status){
+            if(response.status=='cod'){
                 location.href='/order-success/'+response.insertedId
-            }else{
+            }else if(response.status=='razorpay'){
+
                 razorpayPayment(response)
+            }else{
+                for(let i = 0;i < response.links.length;i++){
+                    if(response.links[i].rel == 'approval_url'){
+                    location.href=response.links[i].href
+                    }
+                  }
+                
             }
+
+            
             
         } 
     })
     
  })
+ 
+ 
  function razorpayPayment(order){
     var options = {
         "key": "rzp_test_ha6TgI31z1G1Ys", // Enter the Key ID generated from the Dashboard
-        "amount": "order.amount", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
         "currency": "INR",
         "name": "Fruitkha",
         "description": "Test Transaction",
         "image": "https://example.com/your_logo",
         "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
         "handler": function (response){
-            alert(response.razorpay_payment_id);
-            alert(response.razorpay_order_id);
-            alert(response.razorpay_signature)
+          
             verifyPayment(response,order)
         },
       
@@ -202,13 +235,188 @@ function verifyPayment(response,order){
             order
 
         },
-        method:'post'
+        method:'post',
+        success:(response)=>{
+            if(response.status){
+                location.href='/order-success/'+response.orderId
+
+            }
+        }
     })
 }
+function cancelOrder(orderid,status){
+    swal({
+        title: "Are you sure that you want to cancel this order?",
+       
+        icon: "warning",
+
+        buttons: ["No","Yes"],
+        dangerMode: true,
+    }
+        
+      ).then((value)=>{
+        if(value){
+            document.getElementById(orderid).disabled = true;
+            $.ajax({
+                url:'/admin/orderCancel/'+orderid,
+                method:'get',
+                success:(response)=>{
+                    if(response.status){
+                        location.reload()
+                        
+                        // document.getElementById(orderid).innerHTML='canceled'
+                        
+                    }else{
+                        swal("The order is already cancelled", "error");
+
+                    }
+                }
+            })
+        }else{
+            swal("Cancelled", "error");
+
+        }
+    })
+
+}
+
+    
+            
+         function productdetails(orderid){
+           
+           
+           
+            
+            
+            $.ajax({
+                url:'/view-orders',
+                method:'post',
+                data:{
+                    orderid
+                },
+                success:(response)=>{
+                    if(response.status){
+                     location.reload
+                     
+                    }
+
+                }
+
+            })
+       
+        
+         }  
+         $('#passwordchange').submit((e)=>{
+            e.preventDefault()
+            $.ajax({
+                url:'/change-password',
+                method:'post',
+                data:$('#passwordchange').serialize(),
+                success:(response)=>{
+                    if(response.status){
+                        swal("Changed", "Your password has changed successfully", "success")
+                    }else{
+                        swal("Error", "your password doesn't match");
+                       
+                    }
+                    
+                } 
+            })
+            
+         })
+         
+         
+        function edit(orderid,status){
+            $.ajax({
+                url:'/admin/editstatus',
+                method:'post',
+                data:{
+                    orderid,
+                    status
+                },
+               
+                success:(response)=>{
+                    if(response.status){
+                        location.reload()
+                    }else{
+                        swal("The order is already cancelled", "error");
+                    }
+
+                }
+            })
+
+        }
+            
+     
+    
+$('#wallet').submit((e)=>{
+    e.preventDefault()
+    $.ajax({
+        url:'/addwallet',
+        data:$('#wallet').serialize(),
+        method:'post',
+        success:(response)=>{
+          
+            if(response.status){
+                
+                location.href='/user-profile'
+            }
+
+        }
 
 
- 
- 
+    })
+})
+
+
+function removeOffer(proId){
+    $.ajax({
+        url:'/admin/removeOffer/'+proId,
+        method:'get',
+        success:(response)=>{
+            if(response.status){
+                location.reload()
+            }
+
+        }
+    }
+
+    )
+}
+ $('#coupon-check').submit((e)=>{
+    e.preventDefault()
+    $.ajax({
+        url:'/check-coupon',
+        data:$('#coupon-check').serialize(),
+        method:'post',
+        success:(response)=>{
+            if(response.status=='true'){
+                location.href='/cart'
+
+            }else if (response.status=='already used'){
+                document.getElementById('couponerr').innerHTML='Already Used'
+            }else if(response.status=='only one'){
+                document.getElementById('couponerr').innerHTML='only one coupon can be applied'
+            }else{
+                document.getElementById('couponerr').innerHTML='invalid Coupon'
+            }
+        }
+    })
+ })
+ function category(name){
+
+    $.ajax({
+        url:'/category/'+name,
+        method:'get',
+        success:(response)=>{
+            if(response.status){
+                
+                location.reload()
+            }
+        }
+    })
+ }
+
        
             
             
@@ -222,8 +430,3 @@ function verifyPayment(response,order){
 
 
        
-    
-function alertbox(){
-    
-        
-}

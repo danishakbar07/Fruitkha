@@ -1,0 +1,327 @@
+	<div class="breadcrumb-section breadcrumb-bg">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8 offset-lg-2 text-center">
+						<div class="breadcrumb-text">
+							<p>Fresh adn Organic</p>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<section class="section about-section gray-bg" id="about">
+            <div class="container">
+                <div class="row align-items-center flex-row-reverse">
+                    
+                    <div class="col-lg-6">
+                        <div class="about-text go-to">
+                            <h3 class="dark-color">About Me</h3>
+                          
+                            <div class="row about-list">
+                                <div class="col-md-12">
+                                    <div class="media fw-bold">
+                                        <label>Name</label>
+                                        <p class="fw-bold">{{users.name}}</p>
+                                    </div>
+                                     <div class="media">
+                                        <label>E-mail</label>
+                                        <p class="fw-bold">{{users.email}}</p>
+                                    </div>
+                                     <div class="media">
+                                        <label>Phone</label>
+                                        <p class="fw-bold">{{users.number}}</p>
+                                    </div>
+                                     <div class="media">
+                                        <label>Your Referral code</label>
+                                        <p class="fw-bold">{{users.referralcode}}</p>
+                                    </div>
+                                     <div class="media">
+                                        <label>password</label>
+                                       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">
+  Change
+</button>
+                                    </div>
+                                   
+                                </div>
+                                
+                            </div>
+                        </div>
+     
+ 
+  {{!-- <div class="card-body">
+    <h5 class="card-title">Your Wallet</h5>
+    <div class="card" style="background-color: green;height:12rem ">
+      <h4 class="text-center pt-5">Total Balance</h4>
+      <h5 class="text-center">{{users.wallet}}</h5>
+
+    </div>
+
+  
+
+  </div> --}}
+  <div class="card text-white bg-info mt-3 mb-5 " style="max-width: 18rem;">
+  <div class="card-header">Wallet</div>
+  <div class="card-body">
+      <h4 class="text-center pt-5">Total Balance</h4>
+    <div class="d-flex mt-1 px-5"><h4> {{users.wallet}}</h4></div>
+   <button type="button" style="float: right;" class="btn btn-primary mt-3 btn-success" data-toggle="modal" data-target="#staticBackdro">
+  View Transactions
+</button>
+  </div>
+</div>
+<div class="modal fade" id="staticBackdro" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Transaction history</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container fluid">
+
+       
+        {{#each users.transaction}}
+         <div class="row">
+        {{#if name}}
+        <div class="col-4"><span class="fw-bold">Refferal Bonus</span></div><div class="col-4"><span>{{username}}</span></div><div class="col-4"><span class="text-success fw-bold"> + <i class="fa-solid fa-indian-rupee-sign"></i> {{moneys}}</span></div>
+       </div>
+        {{else if username}}
+        <div class="row">
+        <div class="col-4"><span>For referring</span></div><div class="col-4"><span>{{username}}</span></div><div class="col-4"><span class="text-success fw-bold">+ <i class="fa-solid fa-indian-rupee-sign"></i> {{money}}</span></div>
+         {{/if}}
+           </div>
+        {{/each}}
+      
+        {{#each users.cancel}}
+        <div class="row">
+
+       
+        {{#if amount}}
+       <div class="col-4"><span class="fw-bold">Order Canceled</span></div> <div class="col-4"><span><span class="fw-bold">orderId</span>  {{orderid}}</span></div><div class="col-4"><span class="text-success">+<i class="fa-solid fa-indian-rupee-sign"> {{amount}} </i></span></div>
+        {{/if}}
+         </div>
+         <div class="row">
+          {{#if withdrawamount}}
+           <div class="col-4"><span class="fw-bold">Ordered</span></div> <div class="col-4"><span><span class="fw-bold">orderId</span>  {{orderedid}}</span></div><div class="col-4"><span class="text-danger">-<i class="fa-solid fa-indian-rupee-sign"> {{withdrawamount}} </i></span></div>
+           {{/if}}
+         </div>
+        {{/each}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+
+            
+  <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <div class="card card-outline-secondary">
+                        <div class="card-header">
+                            <h3 class="mb-0">Change Password</h3>
+                        </div>
+                        <div class="card-body">
+                            <form class="form"  id="passwordchange"  role="form" autocomplete="off">
+                                <div class="form-group">
+                                    <label for="inputPasswordOld">Current Password</label>
+                                    <input type="password" name="old" class="form-control" id="inputPasswordOld" required="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPasswordNew">New Password</label>
+                                    <input type="password" name="new" class="form-control" id="inputPasswordNew" required="">
+                                    <span class="form-text small text-muted">
+                                            The password must be 8-20 characters, and must <em>not</em> contain spaces.
+                                        </span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPasswordNewVerify">Verify</label>
+                                    <input type="password" name="verify" class="form-control" id="inputPasswordNewVerify" required="">
+                                    <span class="form-text small text-muted">
+                                            To confirm, type the new password again.
+                                        </span>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit"  class="btn btn-success btn-lg float-right">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /form card change password -->
+
+                </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+<div class="col-lg-6">
+                        <div class="about-avatar">
+                            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" title="" alt="">
+                        </div>
+                    </div>
+                    </div>
+                  
+                </div>
+                <div class="counter">
+                    <div class="row">
+                        <div class="col-6 col-lg-3">
+                            <div class="count-data text-center">
+                                <h6 class="count h2 fs-4" data-to="500" data-speed="500">Your Orders</h6>
+                                <a href=" /view-orders" class="btn btn-warning">Orders</a>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="count-data text-center">
+                                <h6 class="count h2 fs-4" data-to="150" data-speed="150">Show Adrress</h6>
+                                <a href="/view-address" class="btn btn-warning">Address</a>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="count-data text-center">
+                      <div class="modal" tabindex="-1">
+         <h6 class="count h2" data-to="850" data-speed="850">Your Wallet</h6>
+       
+                            </div>
+                        </div>
+                      
+                    </div>
+                </div>
+            </div>
+        </section>
+        <style>
+            body{
+    color: #6F8BA4;
+    margin-top:20px;
+}
+.section {
+    padding: 100px 0;
+    position: relative;
+}
+.gray-bg {
+    background-color: #f5f5f5;
+}
+img {
+    max-width: 100%;
+}
+img {
+    vertical-align: middle;
+    border-style: none;
+}
+/* About Me 
+---------------------*/
+.about-text h3 {
+  font-size: 45px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+@media (max-width: 767px) {
+  .about-text h3 {
+    font-size: 35px;
+  }
+}
+.about-text h6 {
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+@media (max-width: 767px) {
+  .about-text h6 {
+    font-size: 18px;
+  }
+}
+.about-text p {
+  font-size: 18px;
+  max-width: 450px;
+}
+.about-text p mark {
+  font-weight: 600;
+  color: #20247b;
+}
+
+.about-list {
+  padding-top: 10px;
+}
+.about-list .media {
+  padding: 5px 0;
+}
+.about-list label {
+  color: #20247b;
+  font-weight: 600;
+  width: 88px;
+  margin: 0;
+  position: relative;
+}
+.about-list label:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 11px;
+  width: 1px;
+  height: 12px;
+  background: #20247b;
+  -moz-transform: rotate(15deg);
+  -o-transform: rotate(15deg);
+  -ms-transform: rotate(15deg);
+  -webkit-transform: rotate(15deg);
+  transform: rotate(15deg);
+  margin: auto;
+  opacity: 0.5;
+}
+.about-list p {
+  margin: 0;
+  font-size: 15px;
+}
+
+@media (max-width: 991px) {
+  .about-avatar {
+    margin-top: 30px;
+  }
+}
+
+.about-section .counter {
+  padding: 22px 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(31, 45, 61, 0.125);
+}
+.about-section .counter .count-data {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.about-section .counter .count {
+  font-weight: 700;
+  color: #0a0a0f;
+  margin: 0 0 5px;
+}
+.about-section .counter p {
+  font-weight: 600;
+  margin: 0;
+}
+mark {
+    background-image: linear-gradient(rgba(252, 83, 86, 0.6), rgba(252, 83, 86, 0.6));
+    background-size: 100% 3px;
+    background-repeat: no-repeat;
+    background-position: 0 bottom;
+    background-color: transparent;
+    padding: 0;
+    color: currentColor;
+}
+.theme-color {
+    color: #fc5356;
+}
+.dark-color {
+    color: #20247b;
+}
+
+        </style>

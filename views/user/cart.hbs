@@ -30,6 +30,7 @@
 									<th class="product-name">Name</th>
 									<th class="product-price">Price</th>
 									<th class="product-quantity">Quantity</th>
+									<th>Offer</th>
 									<th class="product-total">Total</th>
 								</tr>
 							</thead>
@@ -41,12 +42,16 @@
 									<td class="product-remove"><a href="/removeProduct/{{this._id}}/{{this.product._id}}"><i class="far fa-window-close"></i></a></td>
 									<td class="product-image"><img src="/product-image/{{this.product._id}}.jpg" alt=""></td>
 									<td class="product-name">{{this.product.name}}</td>
-									<td class="product-price">Rs{{this.product.price}}</td>
 									
+									
+
+									<td class="product-price">Rs{{this.product.price}}</td>
+							
 									<td class="product-quantity"><span class="border border-secondary px-4 py-2 " id="{{this.item}}"> {{this.quantity}}</span><button onclick="changeQuantity('{{this._id}}','{{this.item}}','{{this.product.name}}',{{this.product.price}},1)" style="border:none; background-color:rgb(255, 255, 255)  " class="fw-bold rounded-pill   mx-2 bg-warning  " >+</button><button onclick="changeQuantity('{{this._id}}','{{this.item}}','{{this.product.name}}',{{this.product.price}},-1)" style="border:none; background-color:rgb(254, 252, 252)" class="fw-bold   bg-warning rounded-pill  " >-</button></td>
+										<td class="text-success"  >  {{this.product.offerpercentage}} % </span></td>
 									<td class="product-total"  ><span id="{{this.product.name}}">{{this.total}}</span></td>
 								</tr>
-							
+							        
 							</tbody>
 							{{/each}}
 							
@@ -66,29 +71,62 @@
 							<tbody>
 								<tr class="total-data">
 									<td><strong>Subtotal: </strong></td>
-									<td id="subtotala">rs{{subtotal}}</td>
+									<td id="subtotala"><i class="fa-solid fa-indian-rupee-sign"></i> {{total}}</td>
 								</tr>
 								<tr class="total-data">
 									<td><strong>Shipping: </strong></td>
-									<td>Rs50</td>
+									<td>0</td>
 								</tr>
+							
+								{{#if offertotal}}
+								<tr class="total-data">
+									<td><strong>Offer: </strong></td>
+									<td id="offertotal"><span class="fw-bold fs-4">-</span><i class="fa-solid fa-indian-rupee-sign"></i> {{offertotal}}</td>
+									
+								</tr>
+								{{/if}}
+								{{#if coupondiscount}}
+								<tr class="total-data">
+									<td><strong>Coupon discount </strong></td>
+									<td id="coupondiscount " ><span class="fw-bold fs-4">-</span>  <i class="fa-solid fa-indian-rupee-sign"></i> {{ discountcoupon}}</td>
+									
+								</tr>
+								{{/if}}
+								{{#if coupondiscount }}
+									<tr class="total-data">
+									<td><strong>Total: </strong></td>
+									<td id="totala"><i class="fa-solid fa-indian-rupee-sign"></i> {{coupondiscount}}</td>
+                                       
+								</tr>
+								{{else if offertotal}}
 								<tr class="total-data">
 									<td><strong>Total: </strong></td>
-									<td id="totala">Rs{{total}}</td>
+									<td id="totala"><i class="fa-solid fa-indian-rupee-sign"></i> {{subtotals}}</td>
+                                       
 								</tr>
+								{{else}}
+								<tr class="total-data">
+									<td><strong>Total: </strong></td>
+									<td id="totala"><i class="fa-solid fa-indian-rupee-sign"></i> {{total}}</td>
+                                       
+								</tr>
+								{{/if}}
+								
 							</tbody>
 						</table>
 						<div class="cart-buttons">
-							<a href="cart.html" class="boxed-btn">Update Cart</a>
-							<a href="/checkout" class="boxed-btn black">Check Out</a>
+							
+							<a onclick="checkCart()" class="boxed-btn black">Check Out</a>
 						</div>
 					</div>
+				
 
 					<div class="coupon-section">
 						<h3>Apply Coupon</h3>
 						<div class="coupon-form-wrap">
-							<form action="index.html">
-								<p><input type="text" placeholder="Coupon"></p>
+							 <p class="text-danger" id="couponerr"></p>
+							<form id="coupon-check">
+								<p><input type="text" name="name" placeholder="Coupon"></p>
 								<p><input type="submit" value="Apply"></p>
 							</form>
 						</div>
@@ -192,7 +230,7 @@
 						</ul>
 					</div>
 				</div>
-			</div>
+			</div>      
 		</div>
 	</div>
 	<script>
