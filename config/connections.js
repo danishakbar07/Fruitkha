@@ -8,7 +8,7 @@ const state={
 
 
 module.exports.connect = function(done){
-    const url ='mongodb://0.0.0.0:27017/'
+    const url ='mongodb+srv://danishakbar:mongodb@fruitkha.ci3rfqt.mongodb.net/?retryWrites=true&w=majority'
     const dbname='fruitkha'
 
 mongoClient.connect(url,(err,data)=>{
