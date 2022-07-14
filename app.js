@@ -20,7 +20,7 @@ db.connect((err)=>{
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const adminrouter = require('../Fruithka/routes/admin')
+const adminrouter = require('../Fruitkha/routes/admin')
 const hbs = require('express-handlebars');
 const app = express();
 const helpers=require('handlebars-helpers')
