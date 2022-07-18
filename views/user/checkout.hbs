@@ -15,67 +15,88 @@
 	<!-- check out section -->
 	<div class="checkout-section mt-150 mb-150">
 		<div class="container">
-			<div class="row">
-				<div class="col-lg-8">
-					<div class="checkout-accordion-wrap">
+			<div class="row d-flex justify-content-between">
+				<div class="col-lg-5">
+					
 						<div class="accordion" id="accordionExample">
 						  <div class="card single-accordion">
 						   
 
 						  </div>
 						 
-						  <div class="card single-accordion">
-						    <div class="card-header" id="headingThree">
-						      <h5 class="mb-0">
-						        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-						          Payment Details
-						        </button>
-						      </h5>
-						    </div>
-						    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-						      <div class="card-body">
-						        <div class="card-details">
-						        					<div class="mt-2 border  p-5 text-center" >
-											<h4>Wallet amount <span>{{wallet}}</span></h4>
-                            <p>Payment Method</p>
+						
+						
+						    
+						      
+						        
+						        			
+											
+                         
 							<form action="" id="checkout-form"  >
-                            <label class="radio-inline px-5"><br>
+								<div class="card shadow">
+  <div class="card-body">
+    
+
+								<div style="background-color:white;">
+          <div  class="text-center ">
+
+            <h6 class="pt-3" >PAYMENT METHODS</h6>
+          </div> 
+
+          <hr>
+
+       <h6>Wallet Amount <span>{{wallet}}</span></h6>
+        
+          
+            </div> 
+					<div>
+                             <label class="radio ">
 
                                 <input type="radio" name="paymentmethod" value="COD" >COD <br>
                             
-							 </label><br>
-							 {{#if price}}
-							<label class="radio-inline mt-2" ><br>
+							 </label>
+							 </div>
+							 {{#if 	price}}
+							 <div>
+							<label class="radio " >
                                 <input type="radio" name="paymentmethod" value="wallet">wallet 
-                            </label><br>
+                            </label>
+							</div>
 						{{else}}
-						<label class="radio-inline mt-2" ><br>
+						<div>
+						<label class="radio" >
                                 <input type="radio" name="paymentmethod" value="wallet" disabled>wallet 
-                            </label><br>
+                            </label>
+							</div>
 							{{/if}}
-                            <label class="radio-inline mt-2" > <br>
+							<div>
+                            <label class="radio " > 
                                 <input type="radio" name="paymentmethod" value="razorpay">Razorpay 
                             </label><br>
-							<label class="radio-inline mt-2" >
+							</div>
+							<div>
+							<label class="radio " >
                                 <input type="radio" name="paymentmethod" value="paypal">Paypal 
                             </label><br>
+							</div>
 							
 							
-							
-                        </div>  
-						        </div>
-						      </div>
-						    </div>
-						  </div>
-						 
+                        
+						        
+						      
+				
+				
+						   </div>
+</div>
 						</div>
  	<button  class="mt-5 boxed-btn bg-warning rounded-pill float-right"  type="submit" onclick="return validation()" style="border:none ;">Placed Order</button>
+	
 						  </form>
-					</div>
+					
 				</div>
 
-				<div class="col-lg-4">
-					<div class="order-details-wrap">
+				<div class="col-lg-4 mx-3">
+					
 						<table class="order-details">
 							<thead>
 								<tr>
@@ -139,7 +160,7 @@
                        
 						
 					
-					</div>
+					
 				</div>
 			</div>
 		</div>
@@ -147,6 +168,7 @@
 	<!-- end check out section -->
 
 	<!-- logo carousel -->
+
 	<div class="logo-carousel-section">
 		<div class="container">
 			<div class="row">

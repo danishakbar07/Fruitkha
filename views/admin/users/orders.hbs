@@ -27,9 +27,9 @@
   </thead>
   <tbody>
      {{#each orders}}
-     <tr>{{inc @index}}</tr>
-    <tr>
      
+    <tr>
+     <td>{{inc @index}}</td>
       <td>{{date}}</td>
       {{#each user}}
       <td>{{this.name}}</td>
@@ -87,7 +87,7 @@
     {{else}}
       <button class=" dropdown-item rounded-pill  " onclick="edit('{{this._id}}','shipped')">Ship</button>
      <button class="dropdown-item rounded-pill" onclick="edit('{{this._id}}','delivered')">deliver</button>
-    <button  class="dropdown-item rounded-pill" onclick="cancelOrder('{{this._id}}')">cancel</button>
+    <button  class="dropdown-item rounded-pill" onclick="cancelOrder('{{this._id}}','{{this.user}}')">cancel</button>
   {{/ifCompare}}
   {{/ifCompare}}
   {{/ifCompare}}

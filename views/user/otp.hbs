@@ -6,10 +6,11 @@
                 <span id="code">Enter the code we just send on your mobile<br />
                     phone
                 </span>
-                {{#if otpErr}}
-                <p class="text-danger">{{otpErr}}</p>
-                {{/if}}
+              
                 <small style="font-weight: bold ;">+91{{Number}}</small>
+                {{#if err}}
+                <p class="text-danger">invalid otp</p>
+                {{/if}}
             </div>
             <form action="/users/otp-varify" method="post">
                 <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">

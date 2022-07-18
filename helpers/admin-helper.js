@@ -172,14 +172,14 @@ orderedlist:()=>{
              { $sort : { date : -1 } }
         ]).toArray()
     
-        console.log(orderlist);
+        
          resolve(orderlist)
     })
 
 },
 orderCancel:(orderid)=>{
     return new Promise(async (resolve,reject)=>{
-        let check= await db.get().collection(collections.ORDERCOLLECTION).findOne({_id:objectId(orderid)})
+        
 
     
 
@@ -257,7 +257,12 @@ getAllamount:()=>{
     ]).toArray()
     console.log("kuvaaa kuvaaaa");
          console.log(total);
-        resolve(total[0].totals)
+         if(total[0]){
+            resolve(total[0].totals)
+         }else{
+            resolve(0)
+         }
+       
 
     
 })
@@ -325,7 +330,7 @@ codAmount:()=>{
       
            
           ]).toArray()
-          if(total[0].totals){
+          if(total[0]){
             resolve(total[0].totals)
           }else{
             resolve(0)
@@ -390,7 +395,7 @@ paypalAmount:()=>{
       
            
           ]).toArray()
-        if(total[0].totals){
+        if(total[0]){
             resolve(total[0].totals)
         }else{
        resolve(0)

@@ -5,6 +5,7 @@ var router = express.Router();
 const paypal = require('paypal-rest-sdk');
 
 const { Db, ObjectId } = require('mongodb');
+const { getWalletamount } = require('../helpers/user-helper');
 
 
 const Login=async (req,res,next)=>{
@@ -192,10 +193,11 @@ router.get('/checkout',Login,async(req,res)=>{
  subtotal= await userHelper.totalPrice(req.session.user._id)
 
  let total=subtotal
+ req.session.total=subtotal
  req.session.discounttotal=subtotal
 
  let offertotal=await userHelper.getCartoffersum(req.session.user._id)
-
+req.session.offertotal=offertotal
  total = subtotal-offertotal
  req.session.discounttotal=total
  
@@ -211,7 +213,7 @@ router.get('/checkout',Login,async(req,res)=>{
   if(offertotal){
     total=subtotal-offertotal
     discountcoupon=Math.round(total* checkcart.coupondiscount/100)
-  
+  req.session.offercoupon=discountcoupon
   coupondiscount=total-discountcoupon
   req.session.discounttotal=coupondiscount
     
@@ -219,6 +221,7 @@ router.get('/checkout',Login,async(req,res)=>{
    
    }else {
        discountcoupon=total*checkcart.coupondiscount/10
+       req.session.coupon=discountcoupon
        coupondiscount=subtotal-discountcoupon 
        req.session.discounttotal=coupondiscount
    }
@@ -261,7 +264,13 @@ router.post('/checkout',async (req,res)=>{
 // }
   
   
-  userHelper.placeOrder(address,req.body,products, req.session.discounttotal,req.session.user._id).then((response)=>{
+  userHelper.placeOrder(address,req.body,products, req.session.discounttotal,req.session.user._id, 
+    req.session.offertotal,
+    req.session.offercoupon,
+    req.session.coupon,
+    req.session.total
+
+    ).then((response)=>{
     req.session.cartId=response.insertedId
     
  
@@ -287,8 +296,11 @@ router.post('/checkout',async (req,res)=>{
           amount=result.price
         userHelper.reduceWallet(req.session.user._id,amount).then(async()=>{
          let withdraw= await userHelper.withdraw(response.insertedId,amount,req.session.user._id)
+         userHelper.changePaymentstatus(response.insertedId).then(()=>{
           response.status='cod'
           res.json(response)
+         })
+         
 
         })
         })
@@ -409,12 +421,20 @@ const    response={
   })
 })
 router.get('/user-profile',Login,(req,res)=>{
-  userHelper.getUser(req.session.user._id).then((users)=>{
+  userHelper.getUser(req.session.user._id).then(async(users)=>{
 
-    
-    
+    let wallet=await userHelper.getWallet(req.session.user._id)
+    if(wallet){
+      if(wallet.cancel){
+        wallet.cancel.sort()
+        wallet.cancel.reverse()
+      }
+     
 
-    res.render('user-profile/user-profile',{use:true,users,wrong: req.session.wrong,user:req.session.user,cartCount})
+    }
+   
+
+    res.render('user-profile/user-profile',{use:true,users,wrong: req.session.wrong,user:req.session.user,cartCount,wallet})
     req.session.wrong=false
 
   })
@@ -517,7 +537,23 @@ router.post('/check-coupon',(req,res)=>{
    
   })
 })
+router.get('/cancel/:id',(req,res)=>{
+  userHelper.cancelOrder(req.params.id).then((result)=>{
+    
+    console.log(result);
+    if(result.paymentmethod!='COD'){
+      console.log('ethyoo');
+      userHelper.addWallet(req.session.user._id,result.price).then(()=>{
+        userHelper.returnTransaction(result.price,req.session.user._id,req.params.id)
+      })
+      
+    }
+  
+    res.json({status:true})
+  })
+})
 router.get('/error',(req,res)=>{
   res.render('error')
 })
+
 module.exports = router;

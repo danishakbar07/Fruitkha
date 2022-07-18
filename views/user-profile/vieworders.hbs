@@ -10,120 +10,88 @@
 				</div>
 			</div>
 		</div>
-        <div class="container">
-
-             {{#each result}}
-            
-            
-            <div class="row bg-inf mt-5 border border-3 m-3" id="work">
-                
-                <div class="col">
-
-                <h5>shipping Address</h5>
-                <p>{{this.deliveryDetails.name}}</p>
-                <p>{{this.deliveryDetails.address}}</p>
-
-
-
-                </div>
-                  <div class="col">
-                    <h5>Phone No</h5>
-                    <p>{{this.deliveryDetails.phoneno}} </p>
-                    </div>
-                <div class="col">
-                    <h5>Payment Method</h5>
-                    <p>{{this.paymentmethod}}</p>
-
-
-                </div>
-                 <div class="col">
-                    <h5>Total Amount</h5>
-                    <p> {{this.price}}</p>
-
-
-                </div>
-                  <div class="col">
-                    <h5>Status</h5>
-                    <p class="text-success" id="f{{this._id}}" > {{this.status}}</p>
-
-
-                </div>
-                  <div class="col">
-                    <h5>cancel</h5>
-                    {{#ifCompare status 'canceled'}}
-                    <button id="{{this._id}}" type="button" class="btn btn-warning rounded-pill" onclick="cancelOrder('{{this._id}}','{{this.status}}')" disabled>cancel</button>
-                    {{else}}
-                     <button id="{{this._id}}" type="button" class="btn btn-warning rounded-pill" onclick="cancelOrder('{{this._id}}','{{this.status}}')" >cancel</button>
-{{/ifCompare}}
-
-                </div>
-                   <div class="col">
-
-                    <h5>Products</h5>
-
-                   <button type="button"   class="btn btn-warning rounded-pill" data-toggle="modal" data-target="#c{{this._id}}">
-  View Products
-  </button>
-
-
-
-
-
-                </div>
-            </div>
-              
-           
-
-         
-           
-        <div class="modal fade" id="c{{this._id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          
-         
-             
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-      </div>
-     
-    <div class="container">
-        <div class="row">
-
-      
-      <div class="modal-body col-12">
-        
-        
-        <div class="col-lg-4 col-md-6 col-3 text-center" >
-					<div class="single-product-item">
-						<div class="product-image">
-              {{#each product}}
-							<img src="/product-image/{{this._id}}.jpg" alt=""></a>
-						</div>
-						<h3>{{this.name}}</h3>
-					
-                        <p class=""><span>Total</span><span class="fw-bold px-2">Rs {{this.price}}</span>  </p>
-                        {{/each}}
-                        {{#each products}}
-							<p class=><span>Quantity</span> {{this.quantity}} </p>
-                 {{/each}}
-					</div>
-				</div>
-             
-            
     
 
-      <div class="modal-footer">
-        <button type="button"  class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-        </div>
-    </div>
-      </div>
-    </div>
-  </div>
-</div>
-  
-  {{/each}}
  
+ <div class="container">
+    <div class="row">
+
+<div class="table-responsive pb-5">
+  <table class="table table-bordered table-hover  table-dark mb-5 mt-3   ">
+  <thead>
+    <tr>
+      <th scope="col">index</th>
+      <th scope="col">Date</th>
+      
+      <th scope="col">Phone No</th>
+	  <th scope="col">Address</th>
+     <th scope="col">products</th>
+	  
+       <th scope="col">Total</th>
+        <th scope="col">Status</th>
+
+
+
+        <th scope="col">option</th>
+
+   
+    </tr>
+  </thead>
+  <tbody>
+     {{#each result}}
+   
+    <tr>
+       <td>{{inc @index}}</td>
+      <td>{{date}}</td>
+     
+      <td>{{deliveryDetails.phoneno}}</td>
+	   <td>{{deliveryDetails.address}}</td>
+    
+     <td > {{#each product}} {{this.name}} &nbsp;   {{/each}}</td>    
+    
+      <td class="fw-bold">Rs {{price}}</td>
+      {{#ifCompare status 'canceled'}}
+
+      <td><div id={{this._id}} class="text-danger fw-bolder fs-5">{{status}} </div></td>
+     {{else}} 
+      {{#ifCompare status 'shipped'}}
+        <td><div id={{this._id}} class="text-warning fw-bolder fs-5">{{status}} </div></td>
+     {{else}}
+       {{#ifCompare status 'delivered'}}
+
+        
+       <td><div id={{this._id}} class="text-success fw-bolder fs-5">{{status}} </div></td>
+       {{else}}
+       
+        {{#ifCompare status 'placed'}}
+         <td><div id={{this._id}} class="text-success fw-bolder fs-5">{{status}} </div></td>
+         {{else}}
+          <td><div id={{this._id}} class="text-danger fw-bolder fs-5">{{status}} </div></td>
+{{/ifCompare}}
+{{/ifCompare}}
+{{/ifCompare}}
+{{/ifCompare}}
+      <td>
+        {{#ifCompare status 'canceled'}}
+     <button class="btn btn-warning rounded-pill" onclick="cancelOrder('{{this._id}}')"  disabled>cancel </button>
+{{else}}
+ <button class="btn btn-warning rounded-pill" onclick="cancelmyOrder('{{this._id}}')"  >cancel </button>
+ {{/ifCompare}}
+</td>
+    </tr>
+      {{/each}}
+ 
+  </tbody>
+ 
+
+ 
+</table>
+</div>
+
+    </div>
+ </div>
+
+
+
   
  

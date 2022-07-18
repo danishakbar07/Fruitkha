@@ -1,9 +1,10 @@
 <div class="checkout-section mt-150 mb-150">
 		<div class="container">
 			<div class="row">
+			
                 <h2 class="text-center mb-3">Please select  Your Address </h2>
                 {{#each address}}
-                <div class="card col-4 m-2 shadow p-3 mb-5 bg-body rounded ">
+                <div class="card col-md-4 m-2 shadow p-3 mb-5 bg-body rounded ">
   <div class="card-body ">
     <form action="/save-address/{{this._id}}" method="post">
 
@@ -47,7 +48,7 @@
 										 <p class="text-danger" id="nameerror"></p>
 						        		<p><input type="email" placeholder="Email" name="email" id="email" onkeyup="validEmail()"></p>
 											 <p class="text-danger" id="emailerr"></p>
-						        		<p><input type="text" placeholder="Address" name="address" id="address" onkeyup="validateAddress()"></p>
+						        		<p><input type="text" placeholder="Address" name="address"  id="address" onkeyup="validateAddress()"></p>
 										<p class="text-danger" id="addresserr"></p>
 						        		<p><input type="tel" placeholder="Phone" name="phone" id="phone" onkeyup="validateNumber()"></p>
 											<p class="text-danger" id="numbererr"></p>
@@ -89,7 +90,7 @@
     var errorNumber = document.getElementById('numbererr')
     var errorpincode= document.getElementById('pincodeerror')
     function validateName() {
-		console.log("hhhhhhhhhhhhh")
+		
         const name = document.getElementById('name').value;
         if (name == "") {
             errorName.innerHTML = 'Enter your Name'

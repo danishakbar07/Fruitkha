@@ -35,7 +35,7 @@
      
 	  <th scope="col">Address</th>
 	  
-       <th scope="col">Total</th>
+       <th scope="col">paymentmethod</th>
         <th scope="col">Status</th>
         <th scope="col"></th>
 
@@ -48,7 +48,10 @@
       <td>{{orders.date}}</td>
     
 	   <td>{{orders.deliveryDetails.address}}</td>
-      <td class="fw-bold"><i class="fa-solid fa-indian-rupee-sign"></i> {{orders.price}}</td>
+
+      <td class="fw-bold">
+		{{orders.paymentmethod}}
+	  </td>
       <td class="text-success fw-bold">{{orders.status}}</td>
       <td><a href=""></a></td>
       
@@ -56,6 +59,59 @@
  
   </tbody>
 </table>
+			<table class="total-table m-3">
+							<thead class="total-table-head">
+								<tr class="table-total-row">
+									<th>Total</th>
+									<th>Price</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="total-data">
+									<td><strong>Subtotal: </strong></td>
+									<td id="subtotala"><i class="fa-solid fa-indian-rupee-sign"></i> {{orders.total}}</td>
+								</tr>
+								{{!-- <tr class="total-data">
+									<td><strong>Shipping: </strong></td>
+									<td>0</td>
+								</tr> --}}
+							
+								{{#if orders.offer}}
+								<tr class="total-data">
+									<td><strong>Offer: </strong></td>
+									<td id="offertotal"><span class="fw-bold fs-4">-</span><i class="fa-solid fa-indian-rupee-sign"></i> {{orders.offer}}</td>
+									
+								</tr>
+								{{/if}}
+								{{#if orders.offercoupon}}
+								<tr class="total-data">
+									<td><strong>Coupon discount </strong></td>
+									<td id="coupondiscount " ><span class="fw-bold fs-4">-</span>  <i class="fa-solid fa-indian-rupee-sign"></i> {{ orders.offercoupon}}</td>
+									
+								</tr>
+								{{/if}}
+								{{#if orders.coupon}}
+									<tr class="total-data">
+									<td><strong>Total: </strong></td>
+									<td id="totala"><i class="fa-solid fa-indian-rupee-sign"></i> {{orders.coupon}}</td>
+                                       
+								</tr>
+							{{/if}}
+								<tr class="total-data">
+									<td><strong>Total: </strong></td>
+									<td id="totala"><i class="fa-solid fa-indian-rupee-sign"></i> {{orders.price}}</td>
+                                       
+								</tr>
+								{{!-- {{else}}
+								<tr class="total-data">
+									<td><strong>Total: </strong></td>
+									<td id="totala"><i class="fa-solid fa-indian-rupee-sign"></i> {{total}}</td>
+                                       
+								</tr>
+								{{/if}} --}}
+								
+							</tbody>
+						</table>
 <h3 class="m-3"> Ordered Products</h3>
 	<div class="row mt-3">
  {{#each products }}
@@ -66,7 +122,7 @@
 						</div>
 						<h3>{{this.product.name}}</h3>
 						<p class=><span>Quantity</span> {{this.quantity}} </p>
-                        <p class=""><span>Total</span><span class="fw-bold px-2"><i class="fa-solid fa-indian-rupee-sign"></i> {{this.total}}</span>  </p>
+                       
 						
 					</div>
 				</div>

@@ -53,7 +53,7 @@
 						<h3 style="margin: bottom 50px; ;">{{name}}</h3>
 						<p class="product-price"><span style="margin-bottom: 104px;">Per Kg</span> Rs {{price}} </p>
 						{{/if}}
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+						<button class="cart-btn rounded-pill btn-warning mt-3"  onclick="addtoCart('{{this._id}}')"><i class="fas fa-shopping-cart"></i>Add to Cart</button>
 					</div>
 				</div>
 				{{/each}}

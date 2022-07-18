@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const db=require("./config/connections")
 const session= require('express-session')
-// const fileUpload = require('express-fileUpload') 
+ const fileUpload = require('express-fileUpload') 
 
 
 
@@ -45,7 +45,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use( session({secret:"key",cookie:{maxAge:600000000}}))
-// app.use(fileUpload());
+ app.use(fileUpload());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

@@ -9,6 +9,7 @@ module.exports={
     ORDERCOLLECTION:'orders',
     ADDRESSCOLLECTION:'address',
     OFFERCOLLECTION:'offer',
-    COUPONCOLLECTION:'coupon'
+    COUPONCOLLECTION:'coupon',
+    WALLETCOLLECTION:'wallet'
    
 }

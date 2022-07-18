@@ -98,17 +98,23 @@ router.post('/login',(req,res)=>{
           req.session.user=response.user
           req.session.login=true
         if(response.user.referral ){
-          userHelper.addReferral(response.user.referral,req.session.user._id).then(()=>{
-            
-          })
+          if(response.user.bonus){
+            res.redirect("/");
+          }else{
+            userHelper.addReferral(response.user.referral,req.session.user._id,response.user.name).then((response)=>{
+                   
+            })
+          }
+          
         }
           
-    
-          res.redirect("/");
+        res.redirect('/');
+         
 
         }else{
           req.session.block=true
           res.redirect('/users/login')
+
         }
       
         
@@ -126,7 +132,7 @@ router.post('/login',(req,res)=>{
 })
 })
 router.get('/otp',verifyLogin,(req,res)=>{
-  res.render('user/otp')
+  res.render('user/otp',{err:req.session.otpErr})
 })
 router.post('/otp-varify',(req,res)=>{
    var Number = req.session.phone
@@ -153,8 +159,8 @@ router.post('/otp-varify',(req,res)=>{
     
       }else{
         
-        otpErr = 'Invalid OTP'
-        res.render('user/otp',{otpErr,Number})
+        req.session.otpErr = 'Invalid OTP'
+        res.redirect('/otp')
       }
    
 });

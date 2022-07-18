@@ -13,6 +13,7 @@ var instance = new Razorpay({
 });
 const paypal = require('paypal-rest-sdk');
 const { log } = require("console");
+const { ObjectId } = require("mongodb");
  
 paypal.configure({
   'mode': 'sandbox', //sandbox or live
@@ -136,7 +137,9 @@ addtoCart:(proId,userId)=>{
                 }else{
                         db.get().collection(collection.CARTCOLLECTION).updateOne({user:objectId(userId)},
             {
-                $push:{products:proObj }
+                $push:{
+                    products:proObj 
+                }
 
                 
             }).then((response)=>{
@@ -337,7 +340,7 @@ cartdetails:(userId)=>{
         })
     })
 },
-placeOrder:(details,payment,products,price,userid)=>{
+placeOrder:(details,payment,products,price,userid,offer,offercoupon,coupon,total)=>{
     let status=payment.paymentmethod==='COD'?'placed':'Pending'
     let orderObj={
         deliveryDetails:{
@@ -358,6 +361,10 @@ placeOrder:(details,payment,products,price,userid)=>{
        paymentmethod:payment.paymentmethod,
        price:price,
        status:status ,
+       offer:offer,
+       offercoupon:offercoupon,
+       coupon:coupon,
+       total:total,
        date:new Date
 
     }
@@ -466,8 +473,8 @@ generatePaypal:(total)=>{
               "payment_method": "paypal"
           },
           "redirect_urls": {
-              "return_url": "http://localhost:3000/success",
-              "cancel_url": "http://localhost:3000/cancel"
+              "return_url": "https://danishakbargmail.com/success",
+              "cancel_url": "https://danishakbargmail.com/cancel"
           },
           "transactions": [{
               "item_list": {
@@ -550,14 +557,14 @@ orderlists:(userId)=>{
             },
           
             
-            
+            { $sort : { date : -1 } }
                
 
             
             
             
         ]).toArray()
-        
+        console.log('heyyyyyyy');
         console.log(orders);
         
         resolve(orders)
@@ -618,51 +625,53 @@ changePassword:(passwords,userid)=>{
 },
 addWallet:(userid,amount)=>{
     console.log(userid);
-    
+    console.log('ivde ethyooooo');
      money=parseInt(amount)
-    console.log(amount);
+    
     return new Promise(async (resolve,reject)=>{
-        console.log('varuooooo');
-       let user=await db.get().collection(collections.USER_COLLECTION).findOne({_id:objectId(userid)})
-       console.log(user);
-       if(user.wallet){
-        db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+        
+       let user = await db.get().collection(collections.WALLETCOLLECTION).findOne({userid:ObjectId(userid)})
+       if(user){
+        db.get().collection(collections.WALLETCOLLECTION).updateOne({userid:objectId(userid)},{
             $inc:{
-                wallet:money
-           }
-
+                amount:amount
+            }
 
         }).then(()=>{
-            resolve({status:true})
+            resolve()
         })
 
        }else{
-
-       
-       
-        db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
-            $set:{
-                wallet:money
-            }
-        }).then((response)=>{
-            console.log(response);
-            
-            resolve(response)
+        console.log('ivdeyaanooo preshnem');
+        let walletObj={
+            userid:objectId(userid),
+            amount:amount
+        }
+        db.get().collection(collections.WALLETCOLLECTION).insertOne(walletObj).then((result)=>{
+            resolve()
         })
-    }
+       }
+   
 
-    })
+    }) 
 },
 getWalletamount:(userid)=>{
     return new Promise(async (resolve,reject)=>{
-        let user= await db.get().collection(collections.USER_COLLECTION).findOne({_id:objectId(userid)})
-        if(user.wallet){
-            db.get().collection(collections.USER_COLLECTION).findOne({_id:objectId(userid)}).then((result)=>{
-                resolve(result.wallet)
+        let user= await db.get().collection(collections.WALLETCOLLECTION).findOne({userid:objectId(userid)})
+        if(user){
+            db.get().collection(collections.WALLETCOLLECTION).findOne({userid:objectId(userid)}).then((result)=>{
+                resolve(result.amount)
             })
         }else{
             resolve(0)
         }
+    })
+},
+getWallet:(userid)=>{
+    return new Promise((resolve,reject)=>{
+       db.get().collection(collections.WALLETCOLLECTION).findOne({userid:objectId(userid)}).then((result)=>{
+        resolve(result)
+       })
     })
 },
 reduceWallet:(userid,amount)=>{
@@ -670,9 +679,9 @@ reduceWallet:(userid,amount)=>{
     let amound=parseInt(amount)
     return new Promise((resolve,reject)=>{
 
-        db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+        db.get().collection(collections.WALLETCOLLECTION).updateOne({userid:objectId(userid)},{
             $inc:{
-                wallet:-amound
+                amount:-amound
             }
         }).then((response)=>{
             resolve(response)
@@ -810,103 +819,105 @@ couponDetail:(code)=>{
 
     })
 },
-addReferral:(referral,userid)=>{
+addReferral:(referral,userid,username)=>{
 
 
     return new Promise (async (resolve,reject)=>{
-        user= await db.get().collection(collections.USER_COLLECTION).findOne({referralcode:referral})
-        user2= await db.get().collection(collections.USER_COLLECTION).findOne({_id:objectId(userid)})
+     let user = await db.get().collection(collections.USER_COLLECTION).findOne({referralcode:referral})
+     if(user){
         
-    
-        if(user2.wallet){
-console.log('huwaiiiiiiiiiiiii');
-resolve()
-}else{
+        let walletObj ={
+            userid:userid,
+            amount:50,
+            bonus:true,
+            transaction:[{
+              referralMoney:50,
+              username:user.name
+            }]
+        }
+        
+        db.get().collection(collections.WALLETCOLLECTION).insertOne(walletObj).then(()=>{
 
-      console.log('huloooooo');
-       if(user){
-      
-        let transObj={
-            moneys:100,
-            name:user.name
-        }
-        let transObj2={
-            money:100,
-            username:user2.name
-        }
-        if(user.wallet){
-            db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(user._id)},{
-                $inc:{
-                    wallet:100
-               }
-    
-    
-            })
-             
-        }else{
-            db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(user._id)},{
-                $set:{
-                    wallet:100
-                }
-            })
-
-        }
-        if(user.transaction){
-            db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(user._id)},{
-                $push:{transaction:transObj2 }
-            })
-        }else{
-            db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(user._id)},{
-                $set:{
-                    transaction:[transObj2]
-                }
-            })
-        }
-
-        db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
-            $set:{
-                wallet:100,
-                transaction:[transObj]
-            }
-        }).then(()=>{
-            resolve()
         })
+        let userWallet=await db.get().collection(collections.WALLETCOLLECTION).findOne({userid:objectId(user._id)})
+        if(userWallet){
+            
+            db.get().collection(collections.WALLETCOLLECTION).updateOne({userid:objectId(user._id)},{
+                $set:{
+                    transaction:[{
+                        referreredMoney:100,
+                        username:username
+                        
+                      }],
+                     
+                    
+                },
+                 $inc:{
+                amount:100
+            }
+            }
+          
 
-       }
-       resolve()
-    
-    }
+            )
+            
+        }else{
+            let walleObj ={
+                userid:userid,
+                amount:100,
+                bonus:true,
+                transaction:[{
+                  referreredMoney:100,
+                  username:username
+                  
+                }]
+            }
+            db.get().collection(collections.WALLETCOLLECTION).insertOne(walleObj).then(()=>{
+                resolve({status:true})
+            })
+        }
+        resolve({status:true})
+     }else{
+        resolve({status:false})
+     }
     })
 },
 returnTransaction:(amount,userid,orderid)=>{
+    console.log('ingett varindoooooooo');
     return new Promise(async (resolve,reject)=>{
         let cancelObj={
             amount:amount,
             orderid:orderid
         }
-        let user= await db.get().collection(collections.USER_COLLECTION).findOne({_id:objectId(userid)})
-        if(user.cancel){
+        let user= await db.get().collection(collections.WALLETCOLLECTION).findOne({userid:objectId(userid)})
+        
+        console.log('user evideeeee');
 
-            db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+           console.log(user);
+       
+        if(user.cancel){
+console.log('ivdee ethyoooooooo');
+            db.get().collection(collections.WALLETCOLLECTION).updateOne({userid:objectId(userid)},{
                 $push:{
                     cancel:cancelObj
                 }
                 
              
             })
-
+            resolve()
         }else{
 
         
-        db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+        db.get().collection(collections.WALLETCOLLECTION).updateOne({userid:objectId(userid)},{
             $set:{
                 cancel:[cancelObj]
             }
             
          
         })
+        resolve()
     }
-    resolve()
+
+   
     })
 },
 withdraw:(orderid,amount,userid)=>{
@@ -916,10 +927,10 @@ withdraw:(orderid,amount,userid)=>{
             orderedid:orderid,
             
         }
-        let user= await db.get().collection(collections.USER_COLLECTION).findOne({_id:objectId(userid)})
+        let user= await db.get().collection(collections.WALLETCOLLECTION).findOne({userid:objectId(userid)})
         if(user.cancel){
 
-            db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+            db.get().collection(collections.WALLETCOLLECTION).updateOne({userid:objectId(userid)},{
                 $push:{
                     cancel:cancelObj
                 }
@@ -930,7 +941,7 @@ withdraw:(orderid,amount,userid)=>{
         }else{
 
         
-        db.get().collection(collections.USER_COLLECTION).updateOne({_id:objectId(userid)},{
+        db.get().collection(collections.WALLETCOLLECTION).updateOne({userid:objectId(userid)},{
             $set:{
                 cancel:[cancelObj]
             }
@@ -940,7 +951,21 @@ withdraw:(orderid,amount,userid)=>{
     }
     resolve()
     })
+},
+cancelOrder:(orderid)=>{
+    return new Promise((resolve,reject)=>{
+      db.get().collection(collections.ORDERCOLLECTION).updateOne({_id:ObjectId(orderid)},{
+        $set:{
+            status:'canceled'
+        }
+      })
+    db.get().collection(collections.ORDERCOLLECTION).findOne({_id:objectId(orderid)}).then((result)=>{
+        resolve(result)
+    })
+      
+    })
 }
+
 
 
 }

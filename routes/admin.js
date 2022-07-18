@@ -231,23 +231,26 @@ router.get('/orderCancel/:id',Login,(req,res)=>{
 
   
   adminHelper.orderCancel(req.params.id).then(async(response)=>{
-    if(response.status){
+    console.log(response);
+
     let result=await userHelper.orderlist(req.params.id)
          if(result.paymentmethod!="COD"){
           let amount=result.price
-   
+            
         
-            userHelper.addWallet(req.session.user._id,amount)
-            userHelper.returnTransaction(amount,req.session.user._id,req.params.id)
+            userHelper.addWallet(result.user,amount).then(()=>{
+              userHelper.returnTransaction(amount,result.user,req.params.id).then(()=>{
+                res.json(response)
+              })
+             
+            })
+            
        
 
          }
    
        res.json({status:true})
-    }else{
-      
-      res.json({status:false})
-    }
+ 
   
   })
 }catch(e){

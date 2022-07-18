@@ -3,6 +3,7 @@
 
 
 
+
 function addtoCart(proId){
     
     
@@ -244,7 +245,7 @@ function verifyPayment(response,order){
         }
     })
 }
-function cancelOrder(orderid,status){
+function cancelOrder(orderid){
     swal({
         title: "Are you sure that you want to cancel this order?",
        
@@ -256,20 +257,21 @@ function cancelOrder(orderid,status){
         
       ).then((value)=>{
         if(value){
-            document.getElementById(orderid).disabled = true;
+            
             $.ajax({
+                
                 url:'/admin/orderCancel/'+orderid,
+              
                 method:'get',
                 success:(response)=>{
+                    alert(response)
                     if(response.status){
                         location.reload()
                         
-                        // document.getElementById(orderid).innerHTML='canceled'
+                    
                         
-                    }else{
-                        swal("The order is already cancelled", "error");
-
                     }
+
                 }
             })
         }else{
@@ -418,7 +420,36 @@ function removeOffer(proId){
  }
 
        
-            
+ function cancelmyOrder(orderid){
+    swal({
+        title: "Are you sure that you want to cancel this order?",
+       
+        icon: "warning",
+
+        buttons: ["No","Yes"],
+        dangerMode: true,
+    }
+        
+      ).then((value)=>{
+if(value){
+
+
+      
+    $.ajax({
+        url:'/cancel/'+orderid,
+        method:'get',
+        success:(response)=>{
+            if(response.status){
+                location.reload()
+            }
+        }
+
+    })
+}else{
+    swal("Cancelled");
+}
+})
+ }
             
     
       
